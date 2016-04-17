@@ -1,0 +1,60 @@
+﻿<Window x:Class="WPFTextEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WPFTextEditor"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="MainWindow" Height="573.9" Width="737">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <DockPanel VerticalAlignment="Top" Height="20">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" Command="{Binding OnRequestOpenFile}"/>
+                    <MenuItem Header="_Save" Command="{Binding OnRequestSaveFile}"/>
+                    <Separator/>
+                    <MenuItem Header="Close" Command="ApplicationCommands.Close"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_About" Command="{Binding OnRequestAboutInfo}"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <TextBox Margin="0,25,10,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData}" Height="138" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="423"/>
+        <ListView x:Name="TextListView" Margin="10,53,438,10" ItemsSource="{Binding ColViewSource.View}" SelectedItem="{Binding SelectedMessage}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
+                    <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,172,222,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}">
+        </ComboBox>
+        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,233,222,0" VerticalAlignment="Top" Width="105"/>
+        <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,168,372,0" VerticalAlignment="Top"/>
+        <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,229,332,0" VerticalAlignment="Top"/>
+        <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,168,139,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="BoxPositionCombo" HorizontalAlignment="Right" Margin="0,172,10,0" VerticalAlignment="Top" Width="124" SelectedItem="{Binding SelectedMessage.TextBoxPosition}"/>
+        <Label Content="Item ID:" HorizontalAlignment="Right" Margin="0,229,166,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,233,10,0" VerticalAlignment="Top" Width="151" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
+        <Label Content="Unknown1:" HorizontalAlignment="Right" Margin="0,291,364,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,293,222,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top" Width="137"/>
+        <Label Content="Initial Sound:" Margin="0,291,138,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="79"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="127" Text="{Binding SelectedMessage.InitialSound}"/>
+        <Label Content="Initial Camera:" HorizontalAlignment="Right" Margin="0,354,348,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,357,222,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="121" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
+        <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,354,118,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,357,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
+        <Label Content="Lines per Box:" HorizontalAlignment="Right" Margin="0,417,348,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,420,220,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top" Width="123"/>
+        <Label Content="Unknown2:" HorizontalAlignment="Right" Margin="0,420,148,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,420,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="131"/>
+        <Label Content="Unknown3:" HorizontalAlignment="Right" Margin="0,475,362,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,222,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="135"/>
+        <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,476,148,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="133"/>
+        <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." HorizontalAlignment="Left" Margin="10,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="179" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}"/>
+    </Grid>
+</Window>
