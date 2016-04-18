@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GameFormatReader">
-      <HintPath>..\..\WpfApplication1\WpfApplication1\GameFormatReader.dll</HintPath>
+      <HintPath>.\GameFormatReader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
