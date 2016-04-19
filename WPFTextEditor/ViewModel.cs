@@ -214,6 +214,21 @@ namespace WPFTextEditor
                 e.Accepted = false;
         }
 
+        private int m_textBoxPos;
+
+        public int TextBoxPos
+        {
+            get { return m_textBoxPos; }
+            set
+            {
+                if (value != m_textBoxPos)
+                {
+                    m_textBoxPos = value;
+                    NotifyPropertyChanged("TextBoxPos");
+                }
+            }
+        }
+
         #region NotifyPropertyChanged Stuff
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -370,6 +385,16 @@ namespace WPFTextEditor
         public ICommand OnRequestAboutInfo
         {
             get { return new RelayCommand(x => About(), x => true); }
+        }
+
+        public ICommand InsertCommand
+        {
+            get { return new RelayCommand(x => OnInsert(x.ToString()), x => m_selectedMessage != null); }
+        }
+
+        private void OnInsert(string code)
+        {
+            m_selectedMessage.TextData = m_selectedMessage.TextData.Insert(m_textBoxPos, string.Format("<{0}>", code));
         }
     }
 }

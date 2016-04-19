@@ -41,5 +41,12 @@ namespace WPFTextEditor
                 view.Search();
             }
         }
+
+        private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            ViewModel view = (ViewModel)DataContext;
+            TextBox box = sender as TextBox;
+            view.TextBoxPos = box.SelectionStart;
+        }
     }
 }

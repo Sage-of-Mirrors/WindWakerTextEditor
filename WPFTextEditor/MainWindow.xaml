@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WPFTextEditor"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="573.9" Width="737">
+        Title="MainWindow" Height="577.9" Width="737">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -21,17 +21,21 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <TextBox Margin="0,25,10,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData}" Height="138" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="423"/>
-        <ListView x:Name="TextListView" Margin="10,53,438,10" ItemsSource="{Binding ColViewSource.View}" SelectedItem="{Binding SelectedMessage}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
-                    <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,172,222,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}">
-        </ComboBox>
+        <TextBox Margin="0,25,10,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" Height="138" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="423">
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="ApplicationCommands.Cut"/>
+                    <MenuItem Command="ApplicationCommands.Copy"/>
+                    <MenuItem Command="ApplicationCommands.Paste"/>
+                    <MenuItem Header="Control codes...">
+                        <MenuItem Header="Player Name" Command="{Binding InsertCommand}" CommandParameter="player"></MenuItem>
+                        <MenuItem Header="Color" Command="{Binding InsertCommand}" CommandParameter="color:0"></MenuItem>
+                        <MenuItem Header="Scale" Command="{Binding InsertCommand}" CommandParameter="scale:100"></MenuItem>
+                    </MenuItem>
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
+        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,172,222,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
         <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,233,222,0" VerticalAlignment="Top" Width="105"/>
         <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,168,372,0" VerticalAlignment="Top"/>
         <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,229,332,0" VerticalAlignment="Top"/>
@@ -55,6 +59,18 @@
         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,222,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="135"/>
         <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,476,148,0" VerticalAlignment="Top"/>
         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="133"/>
-        <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." HorizontalAlignment="Left" Margin="10,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="179" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}"/>
+        <DockPanel LastChildFill="True" Margin="0,20,452,0">
+            <Grid Width="277" Height="524" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="0,0,98,490" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" HorizontalAlignment="Right" Width="169" Height="24" VerticalAlignment="Bottom"/>
+                <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,13" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
+                            <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData, UpdateSourceTrigger=PropertyChanged}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>
