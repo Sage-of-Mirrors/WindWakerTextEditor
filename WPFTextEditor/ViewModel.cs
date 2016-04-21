@@ -271,6 +271,8 @@ namespace WPFTextEditor
 
                             ColViewSource.Source = LoadedTextFile.MessageList;
 
+                            SelectedMessage = LoadedTextFile.MessageList[0];
+
                             IsDataLoaded = true;
                         }
 
@@ -389,7 +391,7 @@ namespace WPFTextEditor
 
         public ICommand InsertCommand
         {
-            get { return new RelayCommand(x => OnInsert(x.ToString()), x => m_selectedMessage != null); }
+            get { return new RelayCommand(x => OnInsert((string)x), x => m_selectedMessage != null); }
         }
 
         private void OnInsert(string code)

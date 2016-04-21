@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WPFTextEditor"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="577.9" Width="737">
+        Title="MainWindow" Height="623.1" Width="874" Background="#FFEEEEEE">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -21,55 +21,98 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <TextBox Margin="0,25,10,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" Height="138" VerticalAlignment="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Right" Width="423">
-            <TextBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="ApplicationCommands.Cut"/>
-                    <MenuItem Command="ApplicationCommands.Copy"/>
-                    <MenuItem Command="ApplicationCommands.Paste"/>
-                    <MenuItem Header="Control codes...">
-                        <MenuItem Header="Player Name" Command="{Binding InsertCommand}" CommandParameter="player"></MenuItem>
-                        <MenuItem Header="Color" Command="{Binding InsertCommand}" CommandParameter="color:0"></MenuItem>
-                        <MenuItem Header="Scale" Command="{Binding InsertCommand}" CommandParameter="scale:100"></MenuItem>
-                    </MenuItem>
-                </ContextMenu>
-            </TextBox.ContextMenu>
-        </TextBox>
-        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,172,222,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
-        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,233,222,0" VerticalAlignment="Top" Width="105"/>
-        <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,168,372,0" VerticalAlignment="Top"/>
-        <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,229,332,0" VerticalAlignment="Top"/>
-        <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,168,139,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="BoxPositionCombo" HorizontalAlignment="Right" Margin="0,172,10,0" VerticalAlignment="Top" Width="124" SelectedItem="{Binding SelectedMessage.TextBoxPosition}"/>
-        <Label Content="Item ID:" HorizontalAlignment="Right" Margin="0,229,166,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,233,10,0" VerticalAlignment="Top" Width="151" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
-        <Label Content="Unknown1:" HorizontalAlignment="Right" Margin="0,291,364,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,293,222,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top" Width="137"/>
-        <Label Content="Initial Sound:" Margin="0,291,138,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="79"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="127" Text="{Binding SelectedMessage.InitialSound}"/>
-        <Label Content="Initial Camera:" HorizontalAlignment="Right" Margin="0,354,348,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,357,222,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="121" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
-        <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,354,118,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,357,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
-        <Label Content="Lines per Box:" HorizontalAlignment="Right" Margin="0,417,348,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,420,220,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top" Width="123"/>
-        <Label Content="Unknown2:" HorizontalAlignment="Right" Margin="0,420,148,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,420,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="131"/>
-        <Label Content="Unknown3:" HorizontalAlignment="Right" Margin="0,475,362,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,222,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="135"/>
-        <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,476,148,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,478,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="133"/>
-        <DockPanel LastChildFill="True" Margin="0,20,452,0">
-            <Grid Width="277" Height="524" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="0,0,98,490" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" HorizontalAlignment="Right" Width="169" Height="24" VerticalAlignment="Bottom"/>
-                <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,13" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
+        <DockPanel LastChildFill="true" Margin="0,20,498,0">
+            <Grid>
+                <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="10,10,10,0" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" Height="24" VerticalAlignment="Top"/>
+                <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,10" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
                     <ListView.View>
-                        <GridView>
+                        <GridView AllowsColumnReorder="False">
                             <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
-                            <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData, UpdateSourceTrigger=PropertyChanged}"/>
+                            <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData, UpdateSourceTrigger=PropertyChanged}" Width="Auto"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
+            </Grid>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Margin="0,395,10,10" HorizontalAlignment="Right" Width="488">
+            <Grid>
+                <TextBox TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="2,0,0,0" BorderThickness="2">
+                    <TextBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="ApplicationCommands.Cut"/>
+                            <MenuItem Command="ApplicationCommands.Copy"/>
+                            <MenuItem Command="ApplicationCommands.Paste"/>
+                            <MenuItem Header="Control codes...">
+                                <MenuItem Header="Player Name" Command="{Binding InsertCommand}" CommandParameter="player"/>
+                                <MenuItem Header="Color" Command="{Binding InsertCommand}" CommandParameter="color:0"/>
+                                <MenuItem Header="Scale" Command="{Binding InsertCommand}" CommandParameter="scale:100"/>
+                                <Separator/>
+                                <MenuItem Header="Draw by Character" Command="{Binding InsertCommand}" CommandParameter="draw:char"/>
+                                <MenuItem Header="Draw Instantly" Command="{Binding InsertCommand}" CommandParameter="draw:instant"/>
+                                <Separator/>
+                                <MenuItem Header="Wait" Command="{Binding InsertCommand}" CommandParameter="wait:10"/>
+                                <MenuItem Header="Wait and Dismiss" Command="{Binding InsertCommand}" CommandParameter="wait+dismiss:10"/>
+                                <MenuItem Header="Wait and Dismiss with Prompt" Command="{Binding InsertCommand}" CommandParameter="wait+dismiss (prompt):10"/>
+                            </MenuItem>
+                            <MenuItem Header="Icons...">
+                                <MenuItem Header="A Button" Command="{Binding InsertCommand}" CommandParameter="icon:A button"/>
+                                <MenuItem Header="Flashing A Button" Command="{Binding InsertCommand}" CommandParameter="icon:starburst A button"/>
+                                <MenuItem Header="B Button" Command="{Binding InsertCommand}" CommandParameter="icon:B button"/>
+                                <MenuItem Header="X Button" Command="{Binding InsertCommand}" CommandParameter="icon:X button"/>
+                                <MenuItem Header="Y Button" Command="{Binding InsertCommand}" CommandParameter="icon:Y button"/>
+                                <MenuItem Header="Z Button" Command="{Binding InsertCommand}" CommandParameter="icon:Z button"/>
+                                <MenuItem Header="Left Trigger" Command="{Binding InsertCommand}" CommandParameter="icon:L trigger"/>
+                                <MenuItem Header="Right Trigger" Command="{Binding InsertCommand}" CommandParameter="icon:R trigger"/>
+                                <MenuItem Header="C Stick" Command="{Binding InsertCommand}" CommandParameter="icon:c stick"/>
+                                <Separator/>
+                                <MenuItem Header="Left Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:left arrow"/>
+                                <MenuItem Header="Right Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:right arrow"/>
+                                <MenuItem Header="Up Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:up arrow"/>
+                                <MenuItem Header="Down Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:down arrow"/>
+                                <Separator/>
+                                <MenuItem Header="Heart" Command="{Binding InsertCommand}" CommandParameter="icon:heart"/>
+                                <MenuItem Header="Musical Note" Command="{Binding InsertCommand}" CommandParameter="icon:musical note"/>
+                                <MenuItem Header="Target" Command="{Binding InsertCommand}" CommandParameter="icon:target starburst"/>
+                            </MenuItem>
+                        </ContextMenu>
+                    </TextBox.ContextMenu>
+                </TextBox>
+            </Grid>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Margin="0,40,10,0" Width="488" HorizontalAlignment="Right" Height="360" VerticalAlignment="Top">
+            <Grid>
+                <GroupBox Header="Textbox Options" Margin="0,10,0,200">
+                    <Grid Margin="0,0,0,-6">
+                        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,14,255,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
+                        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,55,255,0" VerticalAlignment="Top" Width="105"/>
+                        <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,10,405,0" VerticalAlignment="Top"/>
+                        <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,51,365,0" VerticalAlignment="Top"/>
+                        <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,10,143,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="BoxPositionCombo" HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Width="128" SelectedItem="{Binding SelectedMessage.TextBoxPosition}"/>
+                        <Label Content="Lines per Box:" HorizontalAlignment="Right" Margin="0,51,138,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,54,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top" Width="123"/>
+                        <Label Content="Item ID:" HorizontalAlignment="Right" Margin="0,89,415,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,93,255,0" VerticalAlignment="Top" Width="155" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Misc." Margin="0,160,0,10">
+                    <Grid>
+                        <Label Content="Unknown1:" HorizontalAlignment="Right" Margin="0,10,392,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,13,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top" Width="137"/>
+                        <Label Content="Initial Sound:" Margin="0,10,139,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="79"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,13,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="124" Text="{Binding SelectedMessage.InitialSound}"/>
+                        <Label Content="Initial Camera:" HorizontalAlignment="Right" Margin="0,41,133,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,44,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="118" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
+                        <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,78,119,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="104" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
+                        <Label Content="Unknown2:" HorizontalAlignment="Right" Margin="0,41,392,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="137"/>
+                        <Label Content="Unknown3:" HorizontalAlignment="Right" Margin="0,78,392,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="137"/>
+                        <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,116,392,0" VerticalAlignment="Top"/>
+                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,119,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="137"/>
+                    </Grid>
+                </GroupBox>
             </Grid>
         </DockPanel>
     </Grid>
