@@ -83,8 +83,8 @@
             <Grid>
                 <GroupBox Header="Textbox Options" Margin="0,10,0,200">
                     <Grid Margin="0,0,0,-6">
-                        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,14,255,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
-                        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,55,255,0" VerticalAlignment="Top" Width="105" SelectedItem="{Binding SelectedMessage.InitialDrawType}"/>
+                        <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,14,226,0" VerticalAlignment="Top" Width="174" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
+                        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,55,226,0" VerticalAlignment="Top" Width="134" SelectedItem="{Binding SelectedMessage.InitialDrawType}"/>
                         <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,10,405,0" VerticalAlignment="Top"/>
                         <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,51,365,0" VerticalAlignment="Top"/>
                         <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,10,143,0" VerticalAlignment="Top"/>
@@ -92,7 +92,7 @@
                         <Label Content="Lines per Box:" HorizontalAlignment="Right" Margin="0,51,138,0" VerticalAlignment="Top"/>
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,54,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top" Width="123"/>
                         <Label Content="Item ID:" HorizontalAlignment="Right" Margin="0,89,415,0" VerticalAlignment="Top"/>
-                        <ComboBox x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,93,255,0" VerticalAlignment="Top" Width="155" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
+                        <ComboBox x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,93,226,0" VerticalAlignment="Top" Width="184" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Misc." Margin="0,160,0,10">

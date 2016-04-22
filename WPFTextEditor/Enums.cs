@@ -32,7 +32,8 @@ namespace WPFTextEditor
 
     public enum DrawTypes
     {
-        By_Char = 0,
-        Instantly = 1
+        By_Char_Skippable = 0,
+        Instantly = 1,
+        By_Char_Slow = 2
     }
 }
