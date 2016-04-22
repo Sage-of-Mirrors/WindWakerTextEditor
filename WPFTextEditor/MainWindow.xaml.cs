@@ -30,6 +30,8 @@ namespace WPFTextEditor
             BoxPositionCombo.ItemsSource = Enum.GetValues(typeof(BoxPositions)).Cast<BoxPositions>();
 
             ItemIDBox.ItemsSource = Enum.GetValues(typeof(ItemIDValue)).Cast<ItemIDValue>();
+
+            DrawTypeBox.ItemsSource = Enum.GetValues(typeof(DrawTypes)).Cast<DrawTypes>();
         }
 
         private void SearchBoxInput_KeyDown(object sender, KeyEventArgs e)

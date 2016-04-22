@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WPFTextEditor"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="MainWindow" Height="623.1" Width="874" Background="#FFEEEEEE">
+        Title="GC Zelda Text Editor" Height="623.1" Width="874" Background="#FFEEEEEE">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -84,7 +84,7 @@
                 <GroupBox Header="Textbox Options" Margin="0,10,0,200">
                     <Grid Margin="0,0,0,-6">
                         <ComboBox x:Name="BoxTypeCombo" HorizontalAlignment="Right" Margin="0,14,255,0" VerticalAlignment="Top" Width="145" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
-                        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,55,255,0" VerticalAlignment="Top" Width="105"/>
+                        <ComboBox x:Name="DrawTypeBox" HorizontalAlignment="Right" Margin="0,55,255,0" VerticalAlignment="Top" Width="105" SelectedItem="{Binding SelectedMessage.InitialDrawType}"/>
                         <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,10,405,0" VerticalAlignment="Top"/>
                         <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,51,365,0" VerticalAlignment="Top"/>
                         <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,10,143,0" VerticalAlignment="Top"/>
@@ -105,10 +105,10 @@
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,44,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="118" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
                         <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,78,119,0" VerticalAlignment="Top"/>
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="104" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
-                        <Label Content="Unknown2:" HorizontalAlignment="Right" Margin="0,41,392,0" VerticalAlignment="Top"/>
-                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="137"/>
-                        <Label Content="Unknown3:" HorizontalAlignment="Right" Margin="0,78,392,0" VerticalAlignment="Top"/>
-                        <TextBox HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="137"/>
+                        <Label Content="Item Price:" HorizontalAlignment="Right" Margin="0,41,396,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="ItemPriceBox" HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="141"/>
+                        <Label Content="Next Message:" HorizontalAlignment="Right" Margin="0,78,374,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="NextMessageBox" HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="119"/>
                         <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,116,392,0" VerticalAlignment="Top"/>
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,119,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="137"/>
                     </Grid>

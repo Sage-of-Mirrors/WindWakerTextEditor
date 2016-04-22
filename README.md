@@ -1,4 +1,6 @@
 # GC Zelda Text Editor
+![Program image](http://i.imgur.com/M84lijS.png)
+
 A text editor for The Legend of Zelda: The Wind Waker, and later, possibly, Twilight Princess.
 ## Features
 ### Searching
@@ -25,9 +27,9 @@ This textbox displays the text over a wooden texture. It is used for text writte
 
 This textbox displays the text over a stone texture. It is used for text written on stone objects.
 ### Parchment
-(Image pending)
+![Parchment textbox](http://i.imgur.com/QGQsFei.png)
 
-This textbox displays the text over a paper texture. It is used for the letters that can be obtained from the postbox.
+This textbox displays the text over a paper texture. It is used for the text written on paper, such as letters or Sturgeon's tutorial lessons.
 ### Item Get
 ![Item Get textbox](http://i.imgur.com/4SUAAlm.png)
 
@@ -41,11 +43,13 @@ This textbox is similar to the Item Get type above, except for the fact that it 
 
 This type is used for hints given to the player by either Tetra or the King of Red Lions through the Pirate's Charm. It appears to be the same as the normal textbox, but it may have certain behaviors that distinguish it.
 ### Centered Text
-To-do.
+![Centered textbox](http://i.imgur.com/fjPuibU.png)
 
-### Learning a Wind Waker Song
-To-do.
+This textbox automatically centers the text within it. Besides this, it is the same as the dialog textbox.
+### Wind Waker Song
+![Wind Waker Song textbox](http://i.imgur.com/8EuZPz5.png)
 
+This box is used for things involving the Wind Waker, such as displaying what song the player just conducted or the pattern to copy when learning a new song.
 ### None
 ![No textbox](http://i.imgur.com/EPLXP2g.png)
 
@@ -56,20 +60,25 @@ This textbox type displays text with no box. Though it used during the prologue,
 The textbox options include a field that determines at which predefined position on the screen the textbox draws. These values are described below.
 
 ### Top 1
-To-do.
+![Top 1](http://i.imgur.com/L6UEkir.png)
 
+This places the textbox at the top of the screen. The difference between Top 1 and Top 2 is unknown.
 ### Top 2
-To-do.
+![Top 2](http://i.imgur.com/0vjpjZC.png)
 
+This places the textbox at the top of the screen. The difference between Top 1 and Top 2 is unknown.
 ### Center
-To-do.
+![Center](http://i.imgur.com/0vwBoln.png)
 
+This places the textbox at the center of the screen.
 ### Bottom 1
-To-do.
+![Bottom 1](http://i.imgur.com/zCDS1dK.png)
 
+This places the textbox at the bottom of the screen. The differences between Bottom 1 and Bottom 2 are unknown.
 ### Bottom 2
-To-do.
+![Bottom 2](http://i.imgur.com/XG1IRrt.png)
 
+This places the textbox at the bottom of the screen. The differences between Bottom 1 and Bottom 2 are unknown.
 ## To-Do
 * Dumping of text and message settings to file
 * Search and Replace function

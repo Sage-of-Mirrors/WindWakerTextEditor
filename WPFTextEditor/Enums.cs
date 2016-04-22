@@ -8,16 +8,16 @@ namespace WPFTextEditor
 {
     public enum BoxTypes
     {
-        Normal = 0,
-        SpecialWithoutItemImage = 1,
+        Dialog = 0,
+        Special = 1,
         Wood = 2,
-        NoBox = 5,
+        None = 5,
         Stone = 6,
         Parchment = 7,
-        SpecialWithImage = 9,
+        Item_Get = 9,
         Hint = 10,
-        NormalWithTextCentered = 14,
-        LearningAWindWakerSong = 15
+        Centered_Text = 13,
+        Wind_Waker_Song = 14
 
     }
 
@@ -28,5 +28,11 @@ namespace WPFTextEditor
         Center = 2,
         Bottom1 = 3,
         Bottom2 = 4
+    }
+
+    public enum DrawTypes
+    {
+        By_Char = 0,
+        Instantly = 1
     }
 }

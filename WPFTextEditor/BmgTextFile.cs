@@ -221,7 +221,7 @@ namespace WPFTextEditor
 
         #region byte InitialDrawType
 
-        public byte InitialDrawType
+        public DrawTypes InitialDrawType
         {
             get { return m_initialDrawType; }
 
@@ -236,7 +236,7 @@ namespace WPFTextEditor
             }
         }
 
-        private byte m_initialDrawType;
+        private DrawTypes m_initialDrawType;
 
         #endregion
 
@@ -435,7 +435,7 @@ namespace WPFTextEditor
 
             m_textBoxType = (BoxTypes)reader.ReadByte();
 
-            m_initialDrawType = reader.ReadByte();
+            m_initialDrawType = (DrawTypes)reader.ReadByte();
 
             m_textBoxPosition = (BoxPositions)reader.ReadByte();
 
