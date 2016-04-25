@@ -7,12 +7,13 @@ using System.Windows.Input;
 using System.Windows.Data;
 using Microsoft.Win32;
 using GameFormatReader.Common;
-using GameFormatReader.GCWii.Binaries.GC;
 using System.IO;
 using System.ComponentModel;
 using System.Windows.Markup;
 using System.Windows.Controls;
 using System.Windows;
+using WArchiveTools.Archives;
+using WArchiveTools.FileSystem;
 
 namespace WPFTextEditor
 {
@@ -33,6 +34,8 @@ namespace WPFTextEditor
         }
 
         private BmgTextFile m_loadedTextFile;
+
+        private string m_loadedFileName;
 
         public BmcColorFile LoadedColorFile
         {
@@ -253,6 +256,42 @@ namespace WPFTextEditor
 
             if (m_openFile.ShowDialog() == true)
             {
+                VirtualFilesystemDirectory sourceDir = WArchiveTools.ArchiveUtilities.LoadArchive(m_openFile.FileName);
+
+                foreach (VirtualFilesystemNode node in sourceDir.Children)
+                {
+                    EndianBinaryReader reader;
+
+                    if (node.Name == "zel_00")
+                    {
+                        VirtualFilesystemFile bmgFile = node as VirtualFilesystemFile;
+
+                        reader = new EndianBinaryReader(bmgFile.File.GetData(), Endian.Big);
+
+                        LoadedTextFile = new BmgTextFile(reader);
+
+                        m_listboxSelectedIndex = 0;
+
+                        IsSearchByText = true;
+
+                        m_loadedFileName = m_openFile.FileName;
+
+                        ColViewSource = new CollectionViewSource();
+
+                        ColViewSource.Source = LoadedTextFile.MessageList;
+
+                        SelectedMessage = LoadedTextFile.MessageList[0];
+
+                        IsDataLoaded = true;
+                    }
+
+                    else if (node.Name == "color")
+                    {
+
+                    }
+                }
+
+                /*
                 RARC m_arc = new RARC(m_openFile.FileName);
 
                 for (int i = 0; i < m_arc.Nodes.Count(); i++)
@@ -266,6 +305,8 @@ namespace WPFTextEditor
                             m_listboxSelectedIndex = 0;
 
                             IsSearchByText = true;
+
+                            m_loadedFileName = m_openFile.FileName;
 
                             ColViewSource = new CollectionViewSource();
 
@@ -281,13 +322,46 @@ namespace WPFTextEditor
                             LoadedColorFile = new BmcColorFile(new EndianBinaryReader(m_arc.Nodes[i].Entries[j].Data, Endian.Big));
                         }
                     }
-                }
+                }*/
             }
         }
 
-        private void Save()
+        private void SaveAs()
         {
+            SaveFileDialog save = new SaveFileDialog();
 
+            save.DefaultExt = ".arc";
+            save.Filter = "Archive (*.arc)|*.arc";
+
+            if (save.ShowDialog() == true)
+            {
+                PathExport(save.FileName);
+            }
+        }
+
+        private void PathExport(string path)
+        {
+            VirtualFilesystemDirectory rootDir = new VirtualFilesystemDirectory("archive");
+
+            // Write text
+            MemoryStream bmgFile = new MemoryStream();
+            EndianBinaryWriter bmgWriter = new EndianBinaryWriter(bmgFile, Endian.Big);
+            LoadedTextFile.Export(bmgWriter);
+            VirtualFilesystemFile bmg = new VirtualFilesystemFile("zel_00", ".bmg", new VirtualFileContents(bmgFile.ToArray()));
+            rootDir.Children.Add(bmg);
+
+            // Write color
+            MemoryStream bmcFile = new MemoryStream();
+            EndianBinaryWriter bmcWriter = new EndianBinaryWriter(bmcFile, Endian.Big);
+            // LoadedColorFile.Export(bmcWriter);
+            using (FileStream tempColorFile = new FileStream(@"C:\Program Files (x86)\SZS Tools\bmgres.arc_dir\archive\color.bmc", FileMode.Open))
+            {
+                EndianBinaryReader testRea = new EndianBinaryReader(tempColorFile, Endian.Big);
+                VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(testRea.ReadBytes((int)tempColorFile.Length)));
+                rootDir.Children.Add(bmc);
+            }
+
+            WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
         }
 
         public void Search()
@@ -376,7 +450,12 @@ namespace WPFTextEditor
 
         public ICommand OnRequestSaveFile
         {
-            get { return new RelayCommand(x => Save(), x => LoadedTextFile != null); }
+            get { return new RelayCommand(x => PathExport(m_loadedFileName), x => LoadedTextFile != null); }
+        }
+
+        public ICommand OnRequestSaveFileAs
+        {
+            get { return new RelayCommand(x => SaveAs(), x => LoadedTextFile != null); }
         }
 
         public ICommand OnRequestSearchMessages

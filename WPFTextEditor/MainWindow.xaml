@@ -13,6 +13,7 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open" Command="{Binding OnRequestOpenFile}"/>
                     <MenuItem Header="_Save" Command="{Binding OnRequestSaveFile}"/>
+                    <MenuItem Header="Save _As..." Command="{Binding OnRequestSaveFileAs}"/>
                     <Separator/>
                     <MenuItem Header="Close" Command="ApplicationCommands.Close"/>
                 </MenuItem>
@@ -106,9 +107,9 @@
                         <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,78,119,0" VerticalAlignment="Top"/>
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="104" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
                         <Label Content="Item Price:" HorizontalAlignment="Right" Margin="0,41,396,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="ItemPriceBox" HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField1}" VerticalAlignment="Top" Width="141"/>
+                        <TextBox x:Name="ItemPriceBox" HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.ItemPrice}" VerticalAlignment="Top" Width="141"/>
                         <Label Content="Next Message:" HorizontalAlignment="Right" Margin="0,78,374,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="NextMessageBox" HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField2}" VerticalAlignment="Top" Width="119"/>
+                        <TextBox x:Name="NextMessageBox" HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NextMessageID}" VerticalAlignment="Top" Width="119"/>
                         <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,116,392,0" VerticalAlignment="Top"/>
                         <TextBox HorizontalAlignment="Right" Height="23" Margin="0,119,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="137"/>
                     </Grid>
