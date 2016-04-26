@@ -17,6 +17,23 @@ using WArchiveTools.FileSystem;
 
 namespace WPFTextEditor
 {
+    /// <summary>
+    /// Null-to-Bool converter. If an object is null, Convert returns false.
+    /// </summary>
+    public class NullToFalseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value != null;
+        }
+
+        public object ConvertBack(object value, Type targetType,
+          object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class ViewModel : INotifyPropertyChanged
     {
         public BmgTextFile LoadedTextFile
@@ -203,8 +220,24 @@ namespace WPFTextEditor
 
                 if (parsed.Count() >= 2)
                 {
-                    if (parsed[1] != "" && src.DisplayItemId != (ItemIDValue)Convert.ToByte(parsed[1]))
-                        e.Accepted = false;
+                    try
+                    {
+                        if (parsed[1] != "" && src.DisplayItemId != (ItemIDValue)Convert.ToByte(parsed[1]))
+                            e.Accepted = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Overflow. Snap the search filter to 255.
+                        if (ex.GetType() == typeof(OverflowException))
+                        {
+                            SearchFilter = string.Format("itemid:{0}", 255);
+                        }
+                        // Format exception - letters and symbols instead of numbers. We'll just... delete... them...?
+                        else if (ex.GetType() == typeof(FormatException))
+                        {
+                            SearchFilter = string.Format("itemid:{0}", parsed[1].Remove(parsed[1].Length - 1));
+                        }
+                    }
                 }
             }
 
@@ -214,8 +247,26 @@ namespace WPFTextEditor
 
                 if (parsed.Count() >= 2)
                 {
-                    if (parsed[1] != "" && Convert.ToInt32(src.MessageId) != Convert.ToInt32(parsed[1]))
-                        e.Accepted = false;
+                    // Oh boy, parsing
+                    try
+                    {
+                        if (parsed[1] != "" && Convert.ToInt32(src.MessageId) != Convert.ToInt32(parsed[1]))
+                            e.Accepted = false;
+                    }
+                    // Something fucked up. Let's catch the exception
+                    catch(Exception ex)
+                    {
+                        // Overflow. So we'll snap the search filter to the highest ID there is.
+                        if (ex.GetType() == typeof(OverflowException))
+                        {
+                            SearchFilter = string.Format("msgid:{0}", (int)(GetHighestID() - 1));
+                        }
+                        // Format exception - letters and symbols instead of numbers. We'll just... delete... them...?
+                        else if (ex.GetType() == typeof(FormatException))
+                        {
+                            SearchFilter = string.Format("msgid:{0}", parsed[1].Remove(parsed[1].Length - 1));
+                        }
+                    }
                 }
             }
 
@@ -348,6 +399,9 @@ namespace WPFTextEditor
             if (save.ShowDialog() == true)
             {
                 PathExport(save.FileName);
+
+                m_loadedFileName = save.FileName;
+                WindowTitle = save.FileName;
             }
         }
 
@@ -491,6 +545,11 @@ namespace WPFTextEditor
             get { return new RelayCommand(x => RemoveMessage(), x => LoadedTextFile != null); }
         }
 
+        public ICommand OnRequestOpenWebPage
+        {
+            get { return new RelayCommand(x => OpenWebPage((string)x), x => true); }
+        }
+
         private void AddMessage()
         {
             short largestID = GetHighestID();
@@ -530,6 +589,11 @@ namespace WPFTextEditor
         private void OnInsert(string code)
         {
             m_selectedMessage.TextData = m_selectedMessage.TextData.Insert(m_textBoxPos, string.Format("<{0}>", code));
+        }
+
+        private void OpenWebPage(string address)
+        {
+            System.Diagnostics.Process.Start(address);
         }
     }
 }
