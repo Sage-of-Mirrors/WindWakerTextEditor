@@ -26,7 +26,7 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <DockPanel LastChildFill="true" Margin="0,20,498,0">
+        <DockPanel LastChildFill="true" Margin="0,20,498,34">
             <Grid>
                 <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="10,10,10,0" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" Height="24" VerticalAlignment="Top"/>
                 <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,10" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
@@ -74,15 +74,25 @@
                                 <MenuItem Header="Z Button" Command="{Binding InsertCommand}" CommandParameter="icon:Z button"/>
                                 <MenuItem Header="Left Trigger" Command="{Binding InsertCommand}" CommandParameter="icon:L trigger"/>
                                 <MenuItem Header="Right Trigger" Command="{Binding InsertCommand}" CommandParameter="icon:R trigger"/>
-                                <MenuItem Header="C Stick" Command="{Binding InsertCommand}" CommandParameter="icon:c stick"/>
+                                <MenuItem Header="C Stick" Command="{Binding InsertCommand}" CommandParameter="icon:C stick"/>
                                 <Separator/>
-                                <MenuItem Header="Left Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:left arrow"/>
-                                <MenuItem Header="Right Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:right arrow"/>
-                                <MenuItem Header="Up Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:up arrow"/>
-                                <MenuItem Header="Down Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:down arrow"/>
+                                <MenuItem Header="Control stick...">
+                                    <MenuItem Header="All Directions" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (all directions)"/>
+                                    <MenuItem Header="Moving Up" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving up)"/>
+                                    <MenuItem Header="Moving Down" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving down)"/>
+                                    <MenuItem Header="Moving Left" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving left)"/>
+                                    <MenuItem Header="Moving Right" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving right)"/>
+                                    <MenuItem Header="Moving Up and Down" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving up+down)"/>
+                                    <MenuItem Header="Moving Left and Right" Command="{Binding InsertCommand}" CommandParameter="icon:Control stick (moving left+right)"/>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Left Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:Left arrow"/>
+                                <MenuItem Header="Right Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:Right arrow"/>
+                                <MenuItem Header="Up Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:Up arrow"/>
+                                <MenuItem Header="Down Arrow" Command="{Binding InsertCommand}" CommandParameter="icon:Down arrow"/>
                                 <Separator/>
                                 <MenuItem Header="Heart" Command="{Binding InsertCommand}" CommandParameter="icon:heart"/>
-                                <MenuItem Header="Musical Note" Command="{Binding InsertCommand}" CommandParameter="icon:musical note"/>
+                                <MenuItem Header="Music Note" Command="{Binding InsertCommand}" CommandParameter="icon:music note"/>
                                 <MenuItem Header="Target" Command="{Binding InsertCommand}" CommandParameter="icon:target starburst"/>
                             </MenuItem>
                         </ContextMenu>
@@ -126,5 +136,7 @@
                 </GroupBox>
             </Grid>
         </DockPanel>
+        <Button Content="Add" Command="{Binding OnRequestAddMessage}" Margin="10,0,684,5" Height="29" VerticalAlignment="Bottom"/>
+        <Button Content="Delete" Command="{Binding OnRequestRemoveMessage}" Margin="0,0,507,5" Height="29" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="172"/>
     </Grid>
 </Window>

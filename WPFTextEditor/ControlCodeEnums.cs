@@ -78,37 +78,37 @@ namespace WPFTextEditor
         [Description("icon:D pad")]
         DPadIcon = 0x12,
 
-        [Description("icon:control stick")]
+        [Description("icon:Control stick (all directions)")]
         StaticControlStickIcon = 0x13,
 
-        [Description("icon:left arrow")]
+        [Description("icon:Left arrow")]
         LeftArrowIcon = 0x14,
 
-        [Description("icon:right arrow")]
+        [Description("icon:Right arrow")]
         RightArrowIcon = 0x15,
 
-        [Description("icon:up arrow")]
+        [Description("icon:Up arrow")]
         UpArrowIcon = 0x16,
 
-        [Description("icon:down arrow")]
+        [Description("icon:Down arrow")]
         DownArrowIcon = 0x17,
 
-        [Description("icon:control stick (moving up)")]
+        [Description("icon:Control stick (moving up)")]
         ControlStickMovingUp = 0x18,
 
-        [Description("icon:control stick (moving down)")]
+        [Description("icon:Control stick (moving down)")]
         ControlStickMovingDown = 0x19,
 
-        [Description("icon:control stick (moving left")]
+        [Description("icon:Control stick (moving left")]
         ControlStickMovingLeft = 0x1A,
 
-        [Description("icon:control stick (moving right)")]
+        [Description("icon:Control stick (moving right)")]
         ControlStickMovingRight = 0x1B,
 
-        [Description("icon:control stick (moving up+down)")]
+        [Description("icon:Control stick (moving up+down)")]
         ControlStickMovingUpAndDown = 0x1C,
 
-        [Description("icon:control stick (moving left+right)")]
+        [Description("icon:Control stick (moving left+right)")]
         ControlStickMovingLeftAndRight = 0x1D,
 
         [Description("first choice")]
@@ -138,7 +138,7 @@ namespace WPFTextEditor
         [Description("player bid selector")]
         PlayerAuctionBidSelector = 0x26,
 
-        [Description("icon:starburst A button")]
+        [Description("icon:flashing A button")]
         StarburstAIcon = 0x27,
 
         [Description("blows")]
@@ -195,7 +195,7 @@ namespace WPFTextEditor
         [Description("icon:heart")]
         HeartIcon = 0x39,
 
-        [Description("icon:musical note")]
+        [Description("icon:music note")]
         MusicNoteIcon = 0x3A,
 
         [Description("target letter count")]

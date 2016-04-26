@@ -587,6 +587,12 @@ namespace WPFTextEditor
             {
                 if (charData[i] != '<')
                 {
+                    if (charData[i] == (char)0xD)
+                    {
+                        charData.Remove(charData[i]);
+                        i--;
+                    }
+
                     continue;
                 }
 
@@ -638,7 +644,7 @@ namespace WPFTextEditor
                                 code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CharDrawInstant, 0);
                             }
 
-                            if (tagArgs[1] == "bychar")
+                            if (tagArgs[1] == "char")
                             {
                                 code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CharDrawByChar, 0);
                             }
@@ -658,40 +664,82 @@ namespace WPFTextEditor
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ThreeChoices, 0);
                         break;
 
-                    case "a button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AButtonIcon, 0);
-                        break;
-
-                    case "b button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BButtonIcon, 0);
-                        break;
-
-                    case "c-stick":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CStickIcon, 0);
-                        break;
-
-                    case "l trigger":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LTriggerIcon, 0);
-                        break;
-
-                    case "r trigger":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RTriggerIcon, 0);
-                        break;
-
-                    case "x button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.XButtonIcon, 0);
-                        break;
-
-                    case "y button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.YButtonIcon, 0);
-                        break;
-
-                    case "z button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ZButtonIcon, 0);
-                        break;
-
-                    case "d pad":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DPadIcon, 0);
+                    case "icon":
+                        switch (tagArgs[1])
+                        {
+                            case "a button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AButtonIcon, 0);
+                                break;
+                            case "b button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BButtonIcon, 0);
+                                break;
+                            case "c stick":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CStickIcon, 0);
+                                break;
+                            case "d pad":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DPadIcon, 0);
+                                break;
+                            case "l trigger":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LTriggerIcon, 0);
+                                break;
+                            case "r trigger":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RTriggerIcon, 0);
+                                break;
+                            case "x button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.XButtonIcon, 0);
+                                break;
+                            case "y button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.YButtonIcon, 0);
+                                break;
+                            case "z button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ZButtonIcon, 0);
+                                break;
+                            case "control stick (all directions)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
+                                break;
+                            case "control stick (moving up)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
+                                break;
+                            case "control stick (moving down)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
+                                break;
+                            case "control stick (moving left)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
+                                break;
+                            case "control stick (moving right)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
+                                break;
+                            case "control stick (moving up+down)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
+                                break;
+                            case "control stick (moving left+right)":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
+                                break;
+                            case "left arrow":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LeftArrowIcon, 0);
+                                break;
+                            case "right arrow":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RightArrowIcon, 0);
+                                break;
+                            case "up arrow":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.UpArrowIcon, 0);
+                                break;
+                            case "down arrow":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DownArrowIcon, 0);
+                                break;
+                            case "flashing a button":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StarburstAIcon, 0);
+                                break;
+                            case "target starburst":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.TargetStarburstIcon, 0);
+                                break;
+                            case "heart":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.HeartIcon, 0);
+                                break;
+                            case "music note":
+                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.HeartIcon, 0);
+                                break;
+                        }
                         break;
 
                     case "control stick":
@@ -737,22 +785,6 @@ namespace WPFTextEditor
                         }
                         break;
 
-                    case "left arrow":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LeftArrowIcon, 0);
-                        break;
-
-                    case "right arrow":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RightArrowIcon, 0);
-                        break;
-
-                    case "up arrow":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.UpArrowIcon, 0);
-                        break;
-
-                    case "down arrow":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DownArrowIcon, 0);
-                        break;
-
                     case "choice one":
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ChoiceOne, 0);
                         break;
@@ -789,20 +821,12 @@ namespace WPFTextEditor
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PlayerAuctionBidSelector, 0);
                         break;
 
-                    case "starburst a button":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StarburstAIcon, 0);
-                        break;
-
                     case "orca blow count":
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.OrcaBlowCount, 0);
                         break;
 
                     case "pirate ship password":
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PirateShipPassword, 0);
-                        break;
-
-                    case "target starburst":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.TargetStarburstIcon, 0);
                         break;
 
                     case "player letter count":
@@ -859,14 +883,6 @@ namespace WPFTextEditor
 
                     case "current arrow capacity":
                         code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CurrentArrowCapacity, 0);
-                        break;
-
-                    case "heart icon":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.HeartIcon, 0);
-                        break;
-
-                    case "music note icon":
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.MusicNoteIcon, 0);
                         break;
 
                     case "target letter count":
@@ -1011,7 +1027,7 @@ namespace WPFTextEditor
                         }
                         break;
 
-                    case "wait + dismiss (prompt)":
+                    case "wait+dismiss (prompt)":
                         if (tagArgs.Length > 1)
                         {
                             code.Add(0x1A);
@@ -1032,7 +1048,7 @@ namespace WPFTextEditor
                         }
                         break;
 
-                    case "wait + dismiss":
+                    case "wait+dismiss":
                         if (tagArgs.Length > 1)
                         {
                             code.Add(0x1A);
