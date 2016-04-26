@@ -470,6 +470,14 @@ namespace WPFTextEditor
 
         #endregion
 
+        public Message(short id)
+        {
+            MessageId = id;
+            UnknownField3 = 96;
+            TextBoxPosition = BoxPositions.Bottom1;
+            DisplayItemId = ItemIDValue.No_item;
+        }
+
         public Message(EndianBinaryReader reader)
         {
             m_textDataOffset = reader.ReadInt32();

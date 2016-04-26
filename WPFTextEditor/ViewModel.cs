@@ -35,6 +35,12 @@ namespace WPFTextEditor
 
         private BmgTextFile m_loadedTextFile;
 
+        public string WindowTitle
+        {
+            get { return m_loadedFileName + " - GC Zelda Text Editor"; }
+            set { NotifyPropertyChanged("WindowTitle"); }
+        }
+
         private string m_loadedFileName;
 
         public BmcColorFile LoadedColorFile
@@ -276,6 +282,8 @@ namespace WPFTextEditor
 
                         m_loadedFileName = m_openFile.FileName;
 
+                        WindowTitle = m_loadedFileName;
+
                         ColViewSource = new CollectionViewSource();
 
                         ColViewSource.Source = LoadedTextFile.MessageList;
@@ -471,6 +479,52 @@ namespace WPFTextEditor
         public ICommand InsertCommand
         {
             get { return new RelayCommand(x => OnInsert((string)x), x => m_selectedMessage != null); }
+        }
+
+        public ICommand OnRequestAddMessage
+        {
+            get { return new RelayCommand(x => AddMessage(), x => LoadedTextFile != null); }
+        }
+
+        public ICommand OnRequestRemoveMessage
+        {
+            get { return new RelayCommand(x => RemoveMessage(), x => LoadedTextFile != null); }
+        }
+
+        private void AddMessage()
+        {
+            short largestID = GetHighestID();
+            Message newMes = new Message(largestID);
+            LoadedTextFile.MessageList.Add(newMes);
+
+            SelectedMessage = newMes;
+            ColViewSource.View.Refresh();
+        }
+
+        private void RemoveMessage()
+        {
+            int currentIndex = LoadedTextFile.MessageList.IndexOf(SelectedMessage); // Get index of selected message
+            LoadedTextFile.MessageList.Remove(SelectedMessage); // Remove selected message
+
+            if (LoadedTextFile.MessageList.Count == 0)
+                AddMessage(); // We will always have at least one message in the list
+            else if (currentIndex == 0)
+                SelectedMessage = LoadedTextFile.MessageList[0]; // Have new first message selected if we deleted the original
+            else
+                SelectedMessage = LoadedTextFile.MessageList[currentIndex - 1]; // Have message before the deleted one selected
+        }
+
+        private short GetHighestID()
+        {
+            short highest = 0;
+
+            foreach (Message mes in LoadedTextFile.MessageList)
+            {
+                if (highest < mes.MessageId + 1)
+                    highest = (short)(mes.MessageId + 1);
+            }
+
+            return highest;
         }
 
         private void OnInsert(string code)

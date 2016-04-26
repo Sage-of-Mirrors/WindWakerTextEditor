@@ -20,7 +20,7 @@ namespace WPFTextEditor
             string magic = new string(reader.ReadChars(8));
 
             if (magic != "MGCLbmc1")
-                throw new FormatException("Magic of BMC was incorrect!");
+                throw new FormatException("BMC magic was incorrect.");
 
             reader.BaseStream.Seek(0x20, 0);
 

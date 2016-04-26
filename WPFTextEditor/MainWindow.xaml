@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WPFTextEditor"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="GC Zelda Text Editor" Height="623.1" Width="874" Background="#FFEEEEEE">
+        Title="{Binding WindowTitle}" Height="623.1" Width="874" Background="#FFEEEEEE">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -17,6 +17,10 @@
                     <Separator/>
                     <MenuItem Header="Close" Command="ApplicationCommands.Close"/>
                 </MenuItem>
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Add Message" Command="{Binding OnRequestAddMessage}"/>
+                    <MenuItem Header="Delete Selected Message" Command="{Binding OnRequestRemoveMessage}"/>
+                </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About" Command="{Binding OnRequestAboutInfo}"/>
                 </MenuItem>
@@ -26,6 +30,12 @@
             <Grid>
                 <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="10,10,10,0" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" Height="24" VerticalAlignment="Top"/>
                 <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,10" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Add message" Command="{Binding OnRequestAddMessage}"/>
+                            <MenuItem Header="Delete message" Command="{Binding OnRequestRemoveMessage}"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
