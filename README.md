@@ -5,12 +5,18 @@ A text editor for The Legend of Zelda: The Wind Waker, and later, possibly, Twil
 ## Features
 ### Searching
 Messages can be searched by one of the three methods outined below.
+
 #### Text Search
 Typing the desired search term into the search box will filter the messages in the message panel so that only those that contain the term are displayed. For example, typing in "Orca" will show only the messages that contain the string "Orca".
+
 #### Message ID Search
 The Wind Waker and Twilight Princess assign unique IDs to each message for use in the games' engines. Typing the string "msgid:" followed by the desired message ID will display the message with that ID, if it exists, in the message panel. For example, "msgid:10" will search for a message with the ID 10.
+
 #### Item ID Search
 Messages displayed when obtaining an item show the item's image in the textbox. The image to display is determined by the item ID specified in the message's textbox settings. Typing the string "itemid:" followed by the desired item ID will display only the messages that use that ID in the message panel. For example, in The Wind Waker, "itemid:80" will display only the messages with an item ID of 80, which is the Empty Bottle.
+
+### Adding and Deleting Messages
+With this tool, messages may be added to or deleted from the list at will, and each new message will be given a unique message ID for use in-game. This is useful when using custom text with signs or other objects that call text by ID.
 
 ## Textbox Types
 The Wind Waker has several types of textboxes. They are described below.
@@ -79,6 +85,34 @@ This places the textbox at the bottom of the screen. The differences between Bot
 ![Bottom 2](http://i.imgur.com/XG1IRrt.png)
 
 This places the textbox at the bottom of the screen. The differences between Bottom 1 and Bottom 2 are unknown.
+## Control Tags
+The games use binary codes throughout the text to modify it. When these codes are rendered in the editor, they are known as Control Tags, and are characterized by text bordered by two chevrons, < and >. Below is a list of these tags and what they do.
+### \<color:x\>
+\<color:x\> changes the color of the text. X is the index of a color from the color bank to use. By default, in The Wind Waker, the unique colors and their indexes are:
+
+Index | Color
+  --- | ---
+    0 | White
+    1 | Red
+    2 | Green
+    3 | Blue
+    4 | To-do
+    5 | To-do
+    6 | To-do
+    7 | To-do
+    8 | To-do
+    9 | To-do
+   10 | To-do
+
+### \<wait:x\>
+\<wait:x\> causes the text to stop drawing for x amount of time. The units that x represents are unknown.
+
+### \<wait+dismiss:x\>
+\<wait+dismiss:x\> is usally used at the end of a textbox, and causes the box to wait for x amount of time before closing itself. The player cannot manually close the textbox before time is up.
+
+### \<wait+dimiss (prompt):x\>
+\<wait+dismiss (prompt):x\> is similar to <wait+dismiss:x>. However, here the player is able to manually close the textbox before the specified amount of time has passed.
+
 ## To-Do
 * Dumping of text and message settings to file
 * Search and Replace function
