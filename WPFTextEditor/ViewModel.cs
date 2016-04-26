@@ -287,7 +287,11 @@ namespace WPFTextEditor
 
                     else if (node.Name == "color")
                     {
+                        VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
 
+                        reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
+
+                        LoadedColorFile = new BmcColorFile(reader);
                     }
                 }
 
@@ -353,13 +357,9 @@ namespace WPFTextEditor
             // Write color
             MemoryStream bmcFile = new MemoryStream();
             EndianBinaryWriter bmcWriter = new EndianBinaryWriter(bmcFile, Endian.Big);
-            // LoadedColorFile.Export(bmcWriter);
-            using (FileStream tempColorFile = new FileStream(@"C:\Program Files (x86)\SZS Tools\bmgres.arc_dir\archive\color.bmc", FileMode.Open))
-            {
-                EndianBinaryReader testRea = new EndianBinaryReader(tempColorFile, Endian.Big);
-                VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(testRea.ReadBytes((int)tempColorFile.Length)));
-                rootDir.Children.Add(bmc);
-            }
+            LoadedColorFile.Export(bmcWriter);
+            VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(bmcFile.ToArray()));
+            rootDir.Children.Add(bmc);
 
             WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
         }
