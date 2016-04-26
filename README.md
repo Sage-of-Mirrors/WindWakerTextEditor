@@ -85,8 +85,10 @@ This places the textbox at the bottom of the screen. The differences between Bot
 ![Bottom 2](http://i.imgur.com/XG1IRrt.png)
 
 This places the textbox at the bottom of the screen. The differences between Bottom 1 and Bottom 2 are unknown.
+
 ## Control Tags
 The games use binary codes throughout the text to modify it. When these codes are rendered in the editor, they are known as Control Tags, and are characterized by text bordered by two chevrons, < and >. Below is a list of these tags and what they do.
+
 ### \<color:x\>
 \<color:x\> changes the color of the text. X is the index of a color from the color bank to use. By default, in The Wind Waker, the unique colors and their indexes are:
 
@@ -103,6 +105,9 @@ Index | Color
     8 | To-do
     9 | To-do
    10 | To-do
+   
+### \<icon:x\>
+\<icon:x\> displays the image specified by x in the textbox at the position of the Control Tag. These images are mainly restricted to things related to the controller (face buttons, control stick, C-stick, D-pad), but there are other images, including a heart icon and a music note.
 
 ### \<wait:x\>
 \<wait:x\> causes the text to stop drawing for x amount of time. The units that x represents are unknown.
