@@ -1,5 +1,5 @@
 # GC Zelda Text Editor
-![Program image](http://i.imgur.com/M84lijS.png)
+![Program image](http://i.imgur.com/9kQZtOe.png)
 
 A text editor for The Legend of Zelda: The Wind Waker, and later, possibly, Twilight Princess.
 ## Features
