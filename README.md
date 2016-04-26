@@ -2,6 +2,8 @@
 ![Program image](http://i.imgur.com/9kQZtOe.png)
 
 A text editor for The Legend of Zelda: The Wind Waker, and later, possibly, Twilight Princess.
+
+For The Wind Waker, this editor works on bmgres.arc, which can be found within the game's filesystem at res/msg/bmgres.arc.
 ## Features
 ### Searching
 Messages can be searched by one of the three methods outined below.
