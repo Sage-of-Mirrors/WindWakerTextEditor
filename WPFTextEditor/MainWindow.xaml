@@ -24,6 +24,9 @@
                     <MenuItem Header="Add Message" Command="{Binding OnRequestAddMessage}"/>
                     <MenuItem Header="Delete Selected Message" Command="{Binding OnRequestRemoveMessage}"/>
                 </MenuItem>
+                <MenuItem Header="Options">
+                    <MenuItem Header="Compress on Save" IsCheckable="True" IsChecked="{Binding IsCompressed}"/>
+                </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About" Command="{Binding OnRequestAboutInfo}"/>
                     <MenuItem Header="_Wiki" Command="{Binding OnRequestOpenWebPage}" CommandParameter="https://github.com/Sage-of-Mirrors/WPFTextEditor/wiki"/>

@@ -60,6 +60,21 @@ namespace WPFTextEditor
 
         private string m_loadedFileName;
 
+        public bool IsCompressed
+        {
+            get { return m_isCompressed; }
+            set
+            {
+                if (value != m_isCompressed)
+                {
+                    m_isCompressed = value;
+                    NotifyPropertyChanged("IsCompressed");
+                }
+            }
+        }
+
+        private bool m_isCompressed;
+
         public BmcColorFile LoadedColorFile
         {
             get { return m_loadedColorFile; }
@@ -423,7 +438,10 @@ namespace WPFTextEditor
             VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(bmcFile.ToArray()));
             rootDir.Children.Add(bmc);
 
-            WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
+            if (m_isCompressed)
+                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir, WArchiveTools.ArchiveCompression.Yaz0);
+            else
+                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
         }
 
         public void Search()
