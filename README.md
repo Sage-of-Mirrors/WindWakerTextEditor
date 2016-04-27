@@ -98,13 +98,11 @@ Index | Color
     1 | Red
     2 | Green
     3 | Blue
-    4 | To-do
-    5 | To-do
-    6 | To-do
-    7 | To-do
-    8 | To-do
-    9 | To-do
-   10 | To-do
+    4 | Yellow
+    5 | Cyan
+    6 | Magenta
+    7 | Gray
+    8 | Orange
    
 ### \<icon:x\>
 \<icon:x\> displays the image specified by x in the textbox at the position of the Control Tag. These images are mainly restricted to things related to the controller (face buttons, control stick, C-stick, D-pad), but there are other images, including a heart icon and a music note.
