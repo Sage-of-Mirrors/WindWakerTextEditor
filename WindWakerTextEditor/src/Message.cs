@@ -19,6 +19,21 @@ namespace WindWakerTextEditor
 
         private int m_textDataOffset;
 
+        private int m_index;
+
+        public int Index
+        {
+            get { return m_index; }
+            set
+            {
+                if (value != m_index)
+                {
+                    m_index = value;
+                    NotifyPropertyChanged("Index");
+                }
+            }
+        }
+
         #region short MessageID
 
         public short MessageId
@@ -404,7 +419,7 @@ namespace WindWakerTextEditor
             m_textData = encoding.GetString(charList.ToArray());
         }
 
-        public byte[] WriteMessage(EndianBinaryWriter writer)
+        public byte[] WriteMessage(EndianBinaryWriter writer, Encoding encoding)
         {
             writer.Write((int)0); // Text offset placeholder
             writer.Write((ushort)m_messageId);
@@ -423,14 +438,14 @@ namespace WindWakerTextEditor
             writer.Write((ushort)m_numLinesPerBox);
             writer.Write((byte)0); // Padding.
 
-            return TextToByteArray();
+            return TextToByteArray(encoding);
         }
 
-        private byte[] TextToByteArray()
+        private byte[] TextToByteArray(Encoding encoding)
         {
             byte[] output = new byte[1];
 
-            List<byte> charData = new List<byte>(Encoding.ASCII.GetBytes(m_textData));
+            List<byte> charData = new List<byte>(encoding.GetBytes(m_textData));
 
             for (int i = 0; i < charData.Count; i++)
             {

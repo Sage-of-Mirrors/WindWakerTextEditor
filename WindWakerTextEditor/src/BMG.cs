@@ -70,7 +70,7 @@ namespace WindWakerTextEditor
             for (int i = 0; i < m_numMessages; i++)
             {
                 Message mes = new Message(reader);
-
+                mes.Index = i;
                 MessageList.Add(mes);
             }
 
@@ -99,7 +99,7 @@ namespace WindWakerTextEditor
             writer.Write((int)0); // File size placeholder
             writer.Write((int)2); // Number of sections
 
-            switch (m_Encoding.EncodingName)
+            switch (m_Encoding.WebName)
             {
                 case "windows-1252":
                     writer.Write((byte)1);
@@ -130,7 +130,7 @@ namespace WindWakerTextEditor
 
             foreach (Message mes in m_messageList)
             {
-                messageDataList.Add(mes.WriteMessage(writer));
+                messageDataList.Add(mes.WriteMessage(writer, m_Encoding));
             }
 
             ExtensionMethods.Pad32(writer);

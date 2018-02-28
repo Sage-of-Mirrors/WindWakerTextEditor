@@ -46,6 +46,7 @@
                     </ListView.ContextMenu>
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
+                            <GridViewColumn Header="Index" Width="45" DisplayMemberBinding="{Binding Index}"/>
                             <GridViewColumn Header="Msg. ID" Width="45" DisplayMemberBinding="{Binding MessageId}"/>
                             <GridViewColumn Header="Text Data" DisplayMemberBinding="{Binding TextData, UpdateSourceTrigger=PropertyChanged}" Width="Auto"/>
                         </GridView>

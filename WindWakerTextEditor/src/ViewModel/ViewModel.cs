@@ -283,6 +283,33 @@ namespace WindWakerTextEditor
                 }
             }
 
+            else if (SearchFilter.Contains("index"))
+            {
+                string[] parsed = SearchFilter.Split(':');
+
+                if (parsed.Count() >= 2)
+                {
+                    try
+                    {
+                        if (parsed[1] != "" && Convert.ToInt32(src.Index) != Convert.ToInt32(parsed[1]))
+                            e.Accepted = false;
+                    }
+                    // Something fucked up. Let's catch the exception
+                    catch (OverflowException ex)
+                    {
+                        SearchFilter = string.Format("index:{0}", (int)(LoadedTextFile.MessageList.Count - 1));
+                    }
+                    catch (FormatException ex)
+                    {
+                        SearchFilter = string.Format("index:{0}", parsed[1].Remove(parsed[1].Length - 1));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(string.Format("Exception {0}!"), ex.ToString());
+                    }
+                }
+            }
+
             else if (src.TextData != null && !src.TextData.Contains(SearchFilter))// here is FirstName a Property in my YourCollectionItem
                 e.Accepted = false;
         }
