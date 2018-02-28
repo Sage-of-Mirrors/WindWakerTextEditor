@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WpfApplication3")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Wind Waker Text Editor")]
+[assembly: AssemblyDescription("An editor for text file of The Legend of Zelda: The Wind Waker.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Windows User")]
-[assembly: AssemblyProduct("WpfApplication3")]
-[assembly: AssemblyCopyright("Copyright © Windows User 2015")]
+[assembly: AssemblyCompany("Gamma/Sage of Mirrors")]
+[assembly: AssemblyProduct("Wind Waker Text Editor")]
+[assembly: AssemblyCopyright("Copyright © Gamma/Sage of Mirrors 2016-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
