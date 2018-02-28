@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
     //Control codes in TWW are signaled by a byte value
     //of 0x1A/26 dec. This is followed by the size of the code.

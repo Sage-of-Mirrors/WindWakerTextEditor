@@ -8,9 +8,9 @@ using System.IO;
 using GameFormatReader.Common;
 using System.Collections.ObjectModel;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
-    public class BmgTextFile : INotifyPropertyChanged
+    public class BMG : INotifyPropertyChanged
     {
         public ObservableCollection<Message> MessageList
         {
@@ -21,7 +21,6 @@ namespace WPFTextEditor
                 if (value != m_messageList)
                 {
                     m_messageList = value;
-
                     NotifyPropertyChanged("MessageList");
                 }
             }
@@ -53,7 +52,7 @@ namespace WPFTextEditor
 
         #endregion
 
-        public BmgTextFile(EndianBinaryReader reader)
+        public BMG(EndianBinaryReader reader)
         {
             MessageList = new ObservableCollection<Message>();
 
@@ -311,7 +310,7 @@ namespace WPFTextEditor
 
         #region ItemIdValue DisplayItemId
 
-        public ItemIDValue DisplayItemId
+        public ItemID DisplayItemId
         {
             get { return m_displayItemId; }
 
@@ -326,7 +325,7 @@ namespace WPFTextEditor
             }
         }
 
-        private ItemIDValue m_displayItemId;
+        private ItemID m_displayItemId;
 
         #endregion
 
@@ -475,7 +474,7 @@ namespace WPFTextEditor
             MessageId = id;
             UnknownField3 = 96;
             TextBoxPosition = BoxPositions.Bottom1;
-            DisplayItemId = ItemIDValue.No_item;
+            DisplayItemId = ItemID.No_item;
         }
 
         public Message(EndianBinaryReader reader)
@@ -496,7 +495,7 @@ namespace WPFTextEditor
 
             m_textBoxPosition = (BoxPositions)reader.ReadByte();
 
-            m_displayItemId = (ItemIDValue)reader.ReadByte();
+            m_displayItemId = (ItemID)reader.ReadByte();
 
             m_unknownBool1 = reader.ReadBoolean();
 

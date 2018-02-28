@@ -15,7 +15,7 @@ using System.Windows;
 using WArchiveTools.Archives;
 using WArchiveTools.FileSystem;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
     /// <summary>
     /// Null-to-Bool converter. If an object is null, Convert returns false.
@@ -36,7 +36,7 @@ namespace WPFTextEditor
 
     public class ViewModel : INotifyPropertyChanged
     {
-        public BmgTextFile LoadedTextFile
+        public BMG LoadedTextFile
         {
             get { return m_loadedTextFile; }
             set
@@ -50,17 +50,17 @@ namespace WPFTextEditor
             }
         }
 
-        private BmgTextFile m_loadedTextFile;
+        private BMG m_loadedTextFile;
 
         public string WindowTitle
         {
-            get { return m_loadedFileName + " - GC Zelda Text Editor"; }
+            get { return m_loadedFileName + " - Wind Waker Text Editor"; }
             set { NotifyPropertyChanged("WindowTitle"); }
         }
 
         private string m_loadedFileName;
 
-        public BmcColorFile LoadedColorFile
+        public BMC LoadedColorFile
         {
             get { return m_loadedColorFile; }
             set
@@ -74,7 +74,7 @@ namespace WPFTextEditor
             }
         }
 
-        private BmcColorFile m_loadedColorFile;
+        private BMC m_loadedColorFile;
 
         public Message SelectedMessage
         {
@@ -237,7 +237,7 @@ namespace WPFTextEditor
                 {
                     try
                     {
-                        if (parsed[1] != "" && src.DisplayItemId != (ItemIDValue)Convert.ToByte(parsed[1]))
+                        if (parsed[1] != "" && src.DisplayItemId != (ItemID)Convert.ToByte(parsed[1]))
                             e.Accepted = false;
                     }
                     catch (OverflowException ex)
@@ -338,7 +338,7 @@ namespace WPFTextEditor
 
                         reader = new EndianBinaryReader(bmgFile.File.GetData(), Endian.Big);
 
-                        LoadedTextFile = new BmgTextFile(reader);
+                        LoadedTextFile = new BMG(reader);
 
                         m_listboxSelectedIndex = 0;
 
@@ -363,7 +363,7 @@ namespace WPFTextEditor
 
                         reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
 
-                        LoadedColorFile = new BmcColorFile(reader);
+                        LoadedColorFile = new BMC(reader);
                     }
                 }
 

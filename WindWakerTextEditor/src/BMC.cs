@@ -7,13 +7,13 @@ using System.Drawing;
 using GameFormatReader.Common;
 using System.Collections.ObjectModel;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
-    public class BmcColorFile
+    public class BMC
     {
         ObservableCollection<Color> m_colorList;
 
-        public BmcColorFile(EndianBinaryReader reader)
+        public BMC(EndianBinaryReader reader)
         {
             m_colorList = new ObservableCollection<Color>();
 

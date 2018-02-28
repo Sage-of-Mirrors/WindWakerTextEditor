@@ -1,7 +1,7 @@
-﻿<Window x:Class="WPFTextEditor.MainWindow"
+﻿<Window x:Class="WindWakerTextEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:WPFTextEditor"
+        xmlns:local="clr-namespace:WindWakerTextEditor"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="{Binding WindowTitle}" Height="623.1" Width="874" Background="#FFEEEEEE">
     <Window.DataContext>

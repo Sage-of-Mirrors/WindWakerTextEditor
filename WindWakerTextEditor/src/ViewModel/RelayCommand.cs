@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
         /// <summary>
         /// Implements the ICommand interface

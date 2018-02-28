@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTextEditor", "WPFTextEditor\WPFTextEditor.csproj", "{F2DBCC26-3F2D-494A-BC59-08E072807820}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindWakerTextEditor", "WindWakerTextEditor\WindWakerTextEditor.csproj", "{F2DBCC26-3F2D-494A-BC59-08E072807820}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EA5DF79C-1237-43E3-A0DA-56D17B414808}
 	EndGlobalSection
 EndGlobal

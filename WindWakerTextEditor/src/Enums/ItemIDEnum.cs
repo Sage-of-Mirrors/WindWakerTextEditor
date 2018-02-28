@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
-    public enum ItemIDValue
+    public enum ItemID
     {
         Heart = 0,
         Green_Rupee = 1,

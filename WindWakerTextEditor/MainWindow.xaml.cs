@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 
-namespace WPFTextEditor
+namespace WindWakerTextEditor
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,7 +29,7 @@ namespace WPFTextEditor
 
             BoxPositionCombo.ItemsSource = Enum.GetValues(typeof(BoxPositions)).Cast<BoxPositions>();
 
-            ItemIDBox.ItemsSource = Enum.GetValues(typeof(ItemIDValue)).Cast<ItemIDValue>();
+            ItemIDBox.ItemsSource = Enum.GetValues(typeof(ItemID)).Cast<ItemID>();
 
             DrawTypeBox.ItemsSource = Enum.GetValues(typeof(DrawTypes)).Cast<DrawTypes>();
         }

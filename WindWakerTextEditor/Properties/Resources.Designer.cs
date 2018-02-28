@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WPFTextEditor.Properties {
+namespace WindWakerTextEditor.Properties {
     using System;
     
     
