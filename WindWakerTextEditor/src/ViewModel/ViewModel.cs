@@ -332,38 +332,41 @@ namespace WindWakerTextEditor
                 {
                     EndianBinaryReader reader;
 
-                    if (node.Name == "zel_00")
+                    if (node.Type == NodeType.File)
                     {
-                        VirtualFilesystemFile bmgFile = node as VirtualFilesystemFile;
+                        VirtualFilesystemFile file = node as VirtualFilesystemFile;
 
-                        reader = new EndianBinaryReader(bmgFile.File.GetData(), Endian.Big);
+                        if (file.Extension == ".bmg")
+                        {
+                            reader = new EndianBinaryReader(file.File.GetData(), Endian.Big);
 
-                        LoadedTextFile = new BMG(reader);
+                            LoadedTextFile = new BMG(reader);
 
-                        m_listboxSelectedIndex = 0;
+                            m_listboxSelectedIndex = 0;
 
-                        IsSearchByText = true;
+                            IsSearchByText = true;
 
-                        m_loadedFileName = m_openFile.FileName;
+                            m_loadedFileName = m_openFile.FileName;
 
-                        WindowTitle = m_loadedFileName;
+                            WindowTitle = m_loadedFileName;
 
-                        ColViewSource = new CollectionViewSource();
+                            ColViewSource = new CollectionViewSource();
 
-                        ColViewSource.Source = LoadedTextFile.MessageList;
+                            ColViewSource.Source = LoadedTextFile.MessageList;
 
-                        SelectedMessage = LoadedTextFile.MessageList[0];
+                            SelectedMessage = LoadedTextFile.MessageList[0];
 
-                        IsDataLoaded = true;
-                    }
+                            IsDataLoaded = true;
+                        }
 
-                    else if (node.Name == "color")
-                    {
-                        VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
+                        if (file.Extension == ".bmc")
+                        {
+                            VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
 
-                        reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
+                            reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
 
-                        LoadedColorFile = new BMC(reader);
+                            LoadedColorFile = new BMC(reader);
+                        }
                     }
                 }
 

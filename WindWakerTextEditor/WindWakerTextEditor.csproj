@@ -74,6 +74,7 @@
     <Compile Include="src\Enums\ControlCodeEnums.cs" />
     <Compile Include="src\Enums\TextBoxEnums.cs" />
     <Compile Include="src\Enums\ItemIDEnum.cs" />
+    <Compile Include="src\Message.cs" />
     <Compile Include="src\ViewModel\RelayCommand.cs" />
     <Compile Include="src\ViewModel\ViewModel.cs" />
     <Page Include="MainWindow.xaml">
