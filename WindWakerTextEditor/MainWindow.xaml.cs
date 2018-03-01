@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
+using WindWakerTextEditor.View;
 
 namespace WindWakerTextEditor
 {
@@ -32,16 +33,6 @@ namespace WindWakerTextEditor
             ItemIDBox.ItemsSource = Enum.GetValues(typeof(ItemID)).Cast<ItemID>();
 
             DrawTypeBox.ItemsSource = Enum.GetValues(typeof(DrawTypes)).Cast<DrawTypes>();
-        }
-
-        private void SearchBoxInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                ViewModel view = (ViewModel)DataContext;
-
-                view.Search();
-            }
         }
 
         private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)

@@ -77,6 +77,9 @@
     <Compile Include="src\Message.cs" />
     <Compile Include="src\ViewModel\RelayCommand.cs" />
     <Compile Include="src\ViewModel\ViewModel.cs" />
+    <Compile Include="src\ViewModel\ViewModel_RelayCommands.cs" />
+    <Compile Include="src\ViewModel\NullToFalseConverter.cs" />
+    <Compile Include="src\ViewModel\ViewModel_Properties.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,219 +1,170 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows.Data;
 using Microsoft.Win32;
 using GameFormatReader.Common;
 using System.IO;
 using System.ComponentModel;
-using System.Windows.Markup;
-using System.Windows.Controls;
-using System.Windows;
-using WArchiveTools.Archives;
 using WArchiveTools.FileSystem;
 
-namespace WindWakerTextEditor
+namespace WindWakerTextEditor.View
 {
-    /// <summary>
-    /// Null-to-Bool converter. If an object is null, Convert returns false.
-    /// </summary>
-    public class NullToFalseConverter : IValueConverter
+    public partial class ViewModel : INotifyPropertyChanged
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return value != null;
-        }
-
-        public object ConvertBack(object value, Type targetType,
-          object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class ViewModel : INotifyPropertyChanged
-    {
-        public BMG LoadedTextFile
-        {
-            get { return m_loadedTextFile; }
-            set
-            {
-                if (value != m_loadedTextFile)
-                {
-                    m_loadedTextFile = value;
-
-                    NotifyPropertyChanged("LoadedTextFile");
-                }
-            }
-        }
-
         private BMG m_loadedTextFile;
-
-        public string WindowTitle
-        {
-            get { return m_loadedFileName + " - Wind Waker Text Editor"; }
-            set { NotifyPropertyChanged("WindowTitle"); }
-        }
-
-        private string m_loadedFileName;
-
-        public BMC LoadedColorFile
-        {
-            get { return m_loadedColorFile; }
-            set
-            {
-                if (value != m_loadedColorFile)
-                {
-                    m_loadedColorFile = value;
-
-                    NotifyPropertyChanged("LoadedColorFile");
-                }
-            }
-        }
-
         private BMC m_loadedColorFile;
-
-        public Message SelectedMessage
-        {
-            get { return m_selectedMessage; }
-            set
-            {
-                if (value != m_selectedMessage)
-                {
-                    m_selectedMessage = value;
-
-                    NotifyPropertyChanged("SelectedMessage");
-                }
-            }
-        }
-
         private Message m_selectedMessage;
-
-        public bool IsCompressed
-        {
-            get { return m_isCompressed; }
-            set
-            {
-                if (value != m_isCompressed)
-                {
-                    m_isCompressed = value;
-                    NotifyPropertyChanged("IsCompressed");
-                }
-            }
-        }
-
-        private bool m_isCompressed;
-
-        public string SearchParameter
-        {
-            get { return m_searchParameter; }
-
-            set
-            {
-                if (value != m_searchParameter)
-                {
-                    m_searchParameter = value;
-
-                    NotifyPropertyChanged("SearchParameter");
-
-                    Search();
-                }
-            }
-        }
-
-        private string m_searchParameter;
-
-        public bool IsSearchByText
-        {
-            get { return m_isSearchByText; }
-
-            set
-            {
-                if (value != m_isSearchByText)
-                {
-                    m_isSearchByText = value;
-
-                    NotifyPropertyChanged("IsSearchByText");
-                }
-            }
-        }
-
-        private bool m_isSearchByText;
-
-        private int m_previousSearchIndex;
-
-        public int ListboxSelectedIndex
-        {
-            get { return m_listboxSelectedIndex; }
-
-            set
-            {
-                if (value != m_listboxSelectedIndex)
-                {
-                    m_listboxSelectedIndex = value;
-
-                    NotifyPropertyChanged("ListboxSelectedIndex");
-                }
-            }
-        }
-
-        private int m_listboxSelectedIndex;
-
-        public bool IsDataLoaded
-        {
-            get { return m_isDataLoaded; }
-
-            set
-            {
-                if (value != m_isDataLoaded)
-                {
-                    m_isDataLoaded = value;
-
-                    NotifyPropertyChanged("IsDataLoaded");
-                }
-            }
-        }
-
-        private bool m_isDataLoaded;
-
-        public CollectionViewSource ColViewSource 
-        { 
-            get { return m_colViewSource; } 
-            set
-            {
-                if (value != m_colViewSource)
-                {
-                    m_colViewSource = value;
-
-                    NotifyPropertyChanged("ColViewSource");
-                }
-            }
-        }
-
         private CollectionViewSource m_colViewSource;
 
-        public string SearchFilter
+        private VirtualFilesystemDirectory m_loadedDirRoot;
+
+        private string m_loadedFileName;
+        private string m_searchFilter;
+        private bool m_isDataLoaded;
+        private bool m_isCompressed;
+        private int m_listboxSelectedIndex;
+        private int m_textBoxPos;
+
+        private void Open()
         {
-            get
-            { return m_searchFilter; }
+            OpenFileDialog m_openFile = new OpenFileDialog();
 
-            set
+            m_openFile.FileName = "bmgres";
+            m_openFile.DefaultExt = ".arc";
+            m_openFile.Filter = "arc files (*.arc)|*.arc";
+
+            if (m_openFile.ShowDialog() == true)
             {
-                m_searchFilter = value;
+                VirtualFilesystemDirectory sourceDir = WArchiveTools.ArchiveUtilities.LoadArchive(m_openFile.FileName);
 
-                if (!string.IsNullOrEmpty(SearchFilter))
-                    AddFilter();
+                foreach (VirtualFilesystemNode node in sourceDir.Children)
+                {
+                    EndianBinaryReader reader;
 
-                ColViewSource.View.Refresh();
+                    if (node.Type == NodeType.File)
+                    {
+                        VirtualFilesystemFile file = node as VirtualFilesystemFile;
 
-                NotifyPropertyChanged("SearchFilter");
+                        if (file.Extension == ".bmg")
+                        {
+                            reader = new EndianBinaryReader(file.File.GetData(), Endian.Big);
+
+                            LoadedTextFile = new BMG(reader);
+
+                            m_listboxSelectedIndex = 0;
+                            m_loadedFileName = m_openFile.FileName;
+                            WindowTitle = m_loadedFileName;
+
+                            ColViewSource = new CollectionViewSource();
+                            ColViewSource.Source = LoadedTextFile.MessageList;
+                            SelectedMessage = LoadedTextFile.MessageList[0];
+                            IsDataLoaded = true;
+
+                            m_loadedDirRoot = sourceDir;
+                        }
+
+                        else if (file.Extension == ".bmc")
+                        {
+                            VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
+
+                            reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
+
+                            LoadedColorFile = new BMC(reader);
+                        }
+                    }
+                }
             }
         }
 
-        private string m_searchFilter;
+        private void SaveAs()
+        {
+            SaveFileDialog save = new SaveFileDialog();
+
+            save.DefaultExt = ".arc";
+            save.Filter = "Archive (*.arc)|*.arc";
+
+            if (save.ShowDialog() == true)
+            {
+                PathExport(save.FileName);
+
+                m_loadedFileName = save.FileName;
+                WindowTitle = save.FileName;
+            }
+        }
+
+        private void PathExport(string path)
+        {
+            /*
+            VirtualFilesystemDirectory rootDir = new VirtualFilesystemDirectory("archive");
+
+            // Write text
+            MemoryStream bmgFile = new MemoryStream();
+            EndianBinaryWriter bmgWriter = new EndianBinaryWriter(bmgFile, Endian.Big);
+            LoadedTextFile.Export(bmgWriter);
+            VirtualFilesystemFile bmg = new VirtualFilesystemFile("zel_00", ".bmg", new VirtualFileContents(bmgFile.ToArray()));
+            rootDir.Children.Add(bmg);
+
+            // Write color
+            MemoryStream bmcFile = new MemoryStream();
+            EndianBinaryWriter bmcWriter = new EndianBinaryWriter(bmcFile, Endian.Big);
+            LoadedColorFile.Export(bmcWriter);
+            VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(bmcFile.ToArray()));
+            rootDir.Children.Add(bmc);
+            */
+
+            VirtualFilesystemDirectory rootDir = new VirtualFilesystemDirectory("archive");
+
+            foreach (VirtualFilesystemNode node in m_loadedDirRoot.Children)
+            {
+                if (node is VirtualFilesystemFile)
+                {
+                    VirtualFilesystemFile oldFile = node as VirtualFilesystemFile;
+                    MemoryStream newFileData = new MemoryStream();
+                    EndianBinaryWriter newFileWriter = new EndianBinaryWriter(newFileData, Endian.Big);
+
+                    if (oldFile.Extension == ".bmg")
+                        LoadedTextFile.Export(newFileWriter);
+                    else if (oldFile.Extension == ".bmc")
+                        LoadedColorFile.Export(newFileWriter);
+                    else
+                    {
+                        rootDir.Children.Add(oldFile);
+                        continue;
+                    }
+
+                    VirtualFilesystemFile newFile = new VirtualFilesystemFile(oldFile.Name, oldFile.Extension, new VirtualFileContents(newFileData.ToArray()));
+                    rootDir.Children.Add(newFile);
+                }
+            }
+
+            if (m_isCompressed)
+                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir, WArchiveTools.ArchiveCompression.Yaz0);
+            else
+                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
+        }
+
+        private void AddMessage()
+        {
+            short largestID = GetHighestID();
+            Message newMes = new Message(largestID, LoadedTextFile.MessageList.Count);
+            LoadedTextFile.MessageList.Add(newMes);
+
+            SelectedMessage = newMes;
+            ColViewSource.View.Refresh();
+        }
+
+        private void RemoveMessage()
+        {
+            int currentIndex = LoadedTextFile.MessageList.IndexOf(SelectedMessage); // Get index of selected message
+            LoadedTextFile.MessageList.Remove(SelectedMessage); // Remove selected message
+
+            if (LoadedTextFile.MessageList.Count == 0)
+                AddMessage(); // We will always have at least one message in the list
+            else if (currentIndex == 0)
+                SelectedMessage = LoadedTextFile.MessageList[0]; // Have new first message selected if we deleted the original
+            else
+                SelectedMessage = LoadedTextFile.MessageList[currentIndex - 1]; // Have message before the deleted one selected
+        }
 
         private void AddFilter()
         {
@@ -314,19 +265,17 @@ namespace WindWakerTextEditor
                 e.Accepted = false;
         }
 
-        private int m_textBoxPos;
-
-        public int TextBoxPos
+        private short GetHighestID()
         {
-            get { return m_textBoxPos; }
-            set
+            short highest = 0;
+
+            foreach (Message mes in LoadedTextFile.MessageList)
             {
-                if (value != m_textBoxPos)
-                {
-                    m_textBoxPos = value;
-                    NotifyPropertyChanged("TextBoxPos");
-                }
+                if (highest < mes.MessageId + 1)
+                    highest = (short)(mes.MessageId + 1);
             }
+
+            return highest;
         }
 
         #region NotifyPropertyChanged Stuff
@@ -342,304 +291,5 @@ namespace WindWakerTextEditor
         }
 
         #endregion
-
-        private void Open()
-        {
-            OpenFileDialog m_openFile = new OpenFileDialog();
-
-            m_openFile.FileName = "bmgres";
-            m_openFile.DefaultExt = ".arc";
-            m_openFile.Filter = "arc files (*.arc)|*.arc";
-
-            if (m_openFile.ShowDialog() == true)
-            {
-                VirtualFilesystemDirectory sourceDir = WArchiveTools.ArchiveUtilities.LoadArchive(m_openFile.FileName);
-
-                foreach (VirtualFilesystemNode node in sourceDir.Children)
-                {
-                    EndianBinaryReader reader;
-
-                    if (node.Type == NodeType.File)
-                    {
-                        VirtualFilesystemFile file = node as VirtualFilesystemFile;
-
-                        if (file.Extension == ".bmg")
-                        {
-                            reader = new EndianBinaryReader(file.File.GetData(), Endian.Big);
-
-                            LoadedTextFile = new BMG(reader);
-
-                            m_listboxSelectedIndex = 0;
-
-                            IsSearchByText = true;
-
-                            m_loadedFileName = m_openFile.FileName;
-
-                            WindowTitle = m_loadedFileName;
-
-                            ColViewSource = new CollectionViewSource();
-
-                            ColViewSource.Source = LoadedTextFile.MessageList;
-
-                            SelectedMessage = LoadedTextFile.MessageList[0];
-
-                            IsDataLoaded = true;
-                        }
-
-                        if (file.Extension == ".bmc")
-                        {
-                            VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
-
-                            reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
-
-                            LoadedColorFile = new BMC(reader);
-                        }
-                    }
-                }
-
-                /*
-                RARC m_arc = new RARC(m_openFile.FileName);
-
-                for (int i = 0; i < m_arc.Nodes.Count(); i++)
-                {
-                    for (int j = 0; j < m_arc.Nodes[i].Entries.Count(); j++)
-                    {
-                        if (m_arc.Nodes[i].Entries[j].Name.Contains(".bmg"))
-                        {
-                            LoadedTextFile = new BmgTextFile(new EndianBinaryReader(m_arc.Nodes[i].Entries[j].Data, Endian.Big));
-
-                            m_listboxSelectedIndex = 0;
-
-                            IsSearchByText = true;
-
-                            m_loadedFileName = m_openFile.FileName;
-
-                            ColViewSource = new CollectionViewSource();
-
-                            ColViewSource.Source = LoadedTextFile.MessageList;
-
-                            SelectedMessage = LoadedTextFile.MessageList[0];
-
-                            IsDataLoaded = true;
-                        }
-
-                        if (m_arc.Nodes[i].Entries[j].Name.Contains(".bmc"))
-                        {
-                            LoadedColorFile = new BmcColorFile(new EndianBinaryReader(m_arc.Nodes[i].Entries[j].Data, Endian.Big));
-                        }
-                    }
-                }*/
-            }
-        }
-
-        private void SaveAs()
-        {
-            SaveFileDialog save = new SaveFileDialog();
-
-            save.DefaultExt = ".arc";
-            save.Filter = "Archive (*.arc)|*.arc";
-
-            if (save.ShowDialog() == true)
-            {
-                PathExport(save.FileName);
-
-                m_loadedFileName = save.FileName;
-                WindowTitle = save.FileName;
-            }
-        }
-
-        private void PathExport(string path)
-        {
-            VirtualFilesystemDirectory rootDir = new VirtualFilesystemDirectory("archive");
-
-            // Write text
-            MemoryStream bmgFile = new MemoryStream();
-            EndianBinaryWriter bmgWriter = new EndianBinaryWriter(bmgFile, Endian.Big);
-            LoadedTextFile.Export(bmgWriter);
-            VirtualFilesystemFile bmg = new VirtualFilesystemFile("zel_00", ".bmg", new VirtualFileContents(bmgFile.ToArray()));
-            rootDir.Children.Add(bmg);
-
-            // Write color
-            MemoryStream bmcFile = new MemoryStream();
-            EndianBinaryWriter bmcWriter = new EndianBinaryWriter(bmcFile, Endian.Big);
-            LoadedColorFile.Export(bmcWriter);
-            VirtualFilesystemFile bmc = new VirtualFilesystemFile("color", ".bmc", new VirtualFileContents(bmcFile.ToArray()));
-            rootDir.Children.Add(bmc);
-
-            if (m_isCompressed)
-                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir, WArchiveTools.ArchiveCompression.Yaz0);
-            else
-                WArchiveTools.ArchiveUtilities.WriteArchive(path, rootDir);
-        }
-
-        public void Search()
-        {
-            if (SearchParameter == null)
-                return;
-
-            if (IsSearchByText)
-            {
-                if (m_previousSearchIndex >= LoadedTextFile.MessageList.Count)
-                {
-                    m_previousSearchIndex = -1;
-                }
-
-                string textSearch = Convert.ToString(SearchParameter).ToLower();
-
-                for (int i = m_previousSearchIndex + 1; i < LoadedTextFile.MessageList.Count; i++)
-                {
-                    string searchedStringToLower = LoadedTextFile.MessageList[i].TextData.ToLower();
-
-                    if (searchedStringToLower.Contains(textSearch))
-                    {
-                        ListboxSelectedIndex = i;
-
-                        m_previousSearchIndex = i;
-
-                        return;
-                    }
-                }
-
-                if (System.Windows.MessageBox.Show("The string you entered wasn't found. Repeat search from the beginning?", "String not found", 
-                    System.Windows.MessageBoxButton.YesNo) == System.Windows.MessageBoxResult.Yes)
-                {
-                    m_previousSearchIndex = 0;
-
-                    Search();
-                }
-
-                return;
-            }
-
-            else
-            {
-                try
-                {
-                    short searchedId = Convert.ToInt16(SearchParameter);
-
-                    for (int i = 0; i < LoadedTextFile.MessageList.Count; i++)
-                    {
-                        if (LoadedTextFile.MessageList[i].MessageId == searchedId)
-                        {
-                            ListboxSelectedIndex = i;
-
-                            return;
-                        }
-                    }
-
-                    if (System.Windows.MessageBox.Show("The ID you entered wasn't found. Repeat search from the beginning?", "ID not found",
-                        System.Windows.MessageBoxButton.YesNo) == System.Windows.MessageBoxResult.Yes)
-                    {
-                        m_previousSearchIndex = 0;
-
-                        Search();
-                    }
-
-                    return;
-                }
-
-                catch
-                {
-                    System.Windows.MessageBox.Show("A message ID can only include text.");
-                }
-
-            }
-        }
-
-        public void About()
-        {
-            MessageBox.Show("This is a text editor for The Legend of Zelda: The Wind Waker.\n\nYou can search for specific messages using the search box,\nand you can search by Item ID or Message ID by\ntyping in itemid:<num> or msgid:<num>, respectively.", "About");
-        }
-
-        public ICommand OnRequestOpenFile
-        {
-            get { return new RelayCommand(x => Open(), x => true); }
-        }
-
-        public ICommand OnRequestSaveFile
-        {
-            get { return new RelayCommand(x => PathExport(m_loadedFileName), x => LoadedTextFile != null); }
-        }
-
-        public ICommand OnRequestSaveFileAs
-        {
-            get { return new RelayCommand(x => SaveAs(), x => LoadedTextFile != null); }
-        }
-
-        public ICommand OnRequestSearchMessages
-        {
-            get { return new RelayCommand(x => Search(), x => LoadedTextFile != null); }
-        }
-
-        public ICommand OnRequestAboutInfo
-        {
-            get { return new RelayCommand(x => About(), x => true); }
-        }
-
-        public ICommand InsertCommand
-        {
-            get { return new RelayCommand(x => OnInsert((string)x), x => m_selectedMessage != null); }
-        }
-
-        public ICommand OnRequestAddMessage
-        {
-            get { return new RelayCommand(x => AddMessage(), x => LoadedTextFile != null); }
-        }
-
-        public ICommand OnRequestRemoveMessage
-        {
-            get { return new RelayCommand(x => RemoveMessage(), x => LoadedTextFile != null); }
-        }
-
-        public ICommand OnRequestOpenWebPage
-        {
-            get { return new RelayCommand(x => OpenWebPage((string)x), x => true); }
-        }
-
-        private void AddMessage()
-        {
-            short largestID = GetHighestID();
-            Message newMes = new Message(largestID);
-            LoadedTextFile.MessageList.Add(newMes);
-
-            SelectedMessage = newMes;
-            ColViewSource.View.Refresh();
-        }
-
-        private void RemoveMessage()
-        {
-            int currentIndex = LoadedTextFile.MessageList.IndexOf(SelectedMessage); // Get index of selected message
-            LoadedTextFile.MessageList.Remove(SelectedMessage); // Remove selected message
-
-            if (LoadedTextFile.MessageList.Count == 0)
-                AddMessage(); // We will always have at least one message in the list
-            else if (currentIndex == 0)
-                SelectedMessage = LoadedTextFile.MessageList[0]; // Have new first message selected if we deleted the original
-            else
-                SelectedMessage = LoadedTextFile.MessageList[currentIndex - 1]; // Have message before the deleted one selected
-        }
-
-        private short GetHighestID()
-        {
-            short highest = 0;
-
-            foreach (Message mes in LoadedTextFile.MessageList)
-            {
-                if (highest < mes.MessageId + 1)
-                    highest = (short)(mes.MessageId + 1);
-            }
-
-            return highest;
-        }
-
-        private void OnInsert(string code)
-        {
-            m_selectedMessage.TextData = m_selectedMessage.TextData.Insert(m_textBoxPos, string.Format("<{0}>", code));
-        }
-
-        private void OpenWebPage(string address)
-        {
-            System.Diagnostics.Process.Start(address);
-        }
     }
 }

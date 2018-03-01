@@ -2,13 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WindWakerTextEditor"
+        xmlns:view="clr-namespace:WindWakerTextEditor.View"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="{Binding WindowTitle}" Height="623.1" Width="874" Background="#FFEEEEEE">
     <Window.DataContext>
-        <local:ViewModel/>
+        <view:ViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <local:NullToFalseConverter x:Key="NullToFalseConverter"/>
+        <view:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </Window.Resources>
     <Grid>
         <DockPanel VerticalAlignment="Top" Height="20">
