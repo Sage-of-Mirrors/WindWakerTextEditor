@@ -81,6 +81,12 @@ namespace WindWakerTextEditor
             {
                 int m_textDataOffset = mes.TextDataOffset + m_textDataOrigin;
 
+                if (m_textDataOffset > reader.BaseStream.Length)
+                {
+                    Console.WriteLine($"Message { mes.MessageId } specified an invalid index. Could not be read.");
+                    continue;
+                }
+
                 reader.BaseStream.Position = m_textDataOffset;
 
                 mes.ReadTextData(reader, m_Encoding);

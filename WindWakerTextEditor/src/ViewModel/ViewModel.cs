@@ -47,7 +47,10 @@ namespace WindWakerTextEditor.View
 
                         if (file.Extension == ".bmg")
                         {
-                            reader = new EndianBinaryReader(file.File.GetData(), Endian.Big);
+                            if (IsDataLoaded)
+                                CloseCurrentFile();
+
+                            reader = new EndianBinaryReader(file.Data, Endian.Big);
 
                             LoadedTextFile = new BMG(reader);
 
@@ -67,7 +70,7 @@ namespace WindWakerTextEditor.View
                         {
                             VirtualFilesystemFile bmcFile = node as VirtualFilesystemFile;
 
-                            reader = new EndianBinaryReader(bmcFile.File.GetData(), Endian.Big);
+                            reader = new EndianBinaryReader(bmcFile.Data, Endian.Big);
 
                             LoadedColorFile = new BMC(reader);
                         }
@@ -132,7 +135,7 @@ namespace WindWakerTextEditor.View
                         continue;
                     }
 
-                    VirtualFilesystemFile newFile = new VirtualFilesystemFile(oldFile.Name, oldFile.Extension, new VirtualFileContents(newFileData.ToArray()));
+                    VirtualFilesystemFile newFile = new VirtualFilesystemFile(oldFile.Name, oldFile.Extension, newFileData.ToArray());
                     rootDir.Children.Add(newFile);
                 }
             }

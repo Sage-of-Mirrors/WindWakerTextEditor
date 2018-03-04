@@ -99,7 +99,7 @@ namespace WindWakerTextEditor
         [Description("icon:Control stick (moving down)")]
         ControlStickMovingDown = 0x19,
 
-        [Description("icon:Control stick (moving left")]
+        [Description("icon:Control stick (moving left)")]
         ControlStickMovingLeft = 0x1A,
 
         [Description("icon:Control stick (moving right)")]
@@ -150,13 +150,13 @@ namespace WindWakerTextEditor
         [Description("icon:target starburst")]
         TargetStarburstIcon = 0x2A,
 
-        [Description("letters")]
+        [Description("player letter count")]
         PostOfficeGamePlayerLetterCount = 0x2B,
 
-        [Description("letter sorting minigame rupees")]
+        [Description("letter rupee reward")]
         PostOfficeGameRupeeReward = 0x2C,
 
-        [Description("post box letter count")]
+        [Description("letters")]
         PostBoxLetterCount = 0x2D,
 
         [Description("Korok count")]

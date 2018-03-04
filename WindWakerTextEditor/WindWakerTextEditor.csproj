@@ -52,10 +52,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WArchiveTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\WArchiveTools.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -124,15 +120,18 @@
     <Content Include="lib\EndianBinaryStreams.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="lib\WArchiveTools.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="lib\Xceed.Wpf.AvalonDock.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.Themes.VS2010.dll" />
     <Content Include="lib\Xceed.Wpf.DataGrid.dll" />
     <Content Include="lib\Xceed.Wpf.Toolkit.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WArchive-Tools\ArchiveToolsLib\ArchiveToolsLib.csproj">
+      <Project>{b715685d-1603-4ce3-8ea1-552b01c2ba4b}</Project>
+      <Name>ArchiveToolsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

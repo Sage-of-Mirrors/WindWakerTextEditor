@@ -21,6 +21,11 @@ namespace WindWakerTextEditor.View
             get { return new RelayCommand(x => SaveAs(), x => LoadedTextFile != null); }
         }
 
+        public ICommand OnRequestCloseCurrentFile
+        {
+            get { return new RelayCommand(x => CloseCurrentFile(), x => LoadedTextFile != null); }
+        }
+
         public ICommand OnRequestAboutInfo
         {
             get { return new RelayCommand(x => About(), x => true); }
@@ -44,6 +49,17 @@ namespace WindWakerTextEditor.View
         public ICommand OnRequestOpenWebPage
         {
             get { return new RelayCommand(x => OpenWebPage((string)x), x => true); }
+        }
+
+        public void CloseCurrentFile()
+        {
+            m_colViewSource.Source = null;
+            LoadedTextFile = null;
+            LoadedColorFile = null;
+            m_loadedDirRoot = null;
+            m_selectedMessage = null;
+
+            IsDataLoaded = false;
         }
 
         public void About()

@@ -19,7 +19,7 @@
                     <MenuItem Header="_Save" Command="{Binding OnRequestSaveFile}"/>
                     <MenuItem Header="Save _As..." Command="{Binding OnRequestSaveFileAs}"/>
                     <Separator/>
-                    <MenuItem Header="Close" Command="ApplicationCommands.Close"/>
+                    <MenuItem Header="Close" Command="{Binding OnRequestCloseCurrentFile}"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
                     <MenuItem Header="Add Message" Command="{Binding OnRequestAddMessage}"/>
@@ -74,6 +74,8 @@
                                 <MenuItem Header="Wait" Command="{Binding InsertCommand}" CommandParameter="wait:10"/>
                                 <MenuItem Header="Wait and Dismiss" Command="{Binding InsertCommand}" CommandParameter="wait+dismiss:10"/>
                                 <MenuItem Header="Wait and Dismiss with Prompt" Command="{Binding InsertCommand}" CommandParameter="wait+dismiss (prompt):10"/>
+                                <Separator/>
+                                <MenuItem Header="Furigana" Command="{Binding InsertCommand}" CommandParameter="furigana:1,あ"/>
                             </MenuItem>
                             <MenuItem Header="Icons...">
                                 <MenuItem Header="A Button" Command="{Binding InsertCommand}" CommandParameter="icon:A button"/>

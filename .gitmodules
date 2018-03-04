@@ -1,0 +1,3 @@
+[submodule "WArchive-Tools"]
+	path = WArchive-Tools
+	url = https://github.com/LordNed/WArchive-Tools.git

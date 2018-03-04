@@ -381,6 +381,11 @@ namespace WindWakerTextEditor
 
         public void ReadTextData(EndianBinaryReader reader, Encoding encoding)
         {
+            if (MessageId == 160)
+            {
+
+            }
+
             List<byte> charList = new List<byte>();
 
             byte nextByte = reader.ReadByte();
@@ -390,8 +395,8 @@ namespace WindWakerTextEditor
                 // Not a control code
                 if (nextByte != 0x1A)
                 {
-                    if (nextByte == '\\' || nextByte == '<')
-                        charList.Add((byte)'\\');
+                    //if (nextByte == '\\')
+                        //charList.Add((byte)'\\');
 
                     charList.Add(nextByte);
                 }
@@ -414,6 +419,10 @@ namespace WindWakerTextEditor
                         case 7:
                             string controlCode7 = GetSevenByteControlTag(reader);
                             charList.AddRange(encoding.GetBytes(controlCode7.ToCharArray()));
+                            break;
+                        default:
+                            string controlCodeFuri = GetFuriganaControlTag(reader, m_controlCodeSizeTest, encoding);
+                            charList.AddRange(encoding.GetBytes(controlCodeFuri.ToCharArray()));
                             break;
                     }
                 }
@@ -447,6 +456,62 @@ namespace WindWakerTextEditor
         }
 
         private byte[] TextToByteArray(Encoding encoding)
+        {
+            if (MessageId == 7401)
+            {
+
+            }
+
+            List<byte> outList = new List<byte>();
+
+            int i = 0;
+
+            while (i < TextData.Length)
+            {
+                int index = TextData.IndexOf('\\', i);
+                int count = ((index < 0 ? TextData.Length : index) - i);
+
+                byte[] bytes = encoding.GetBytes(TextData.Substring(i, count));
+                outList.AddRange(bytes);
+
+                i += count;
+
+                if (i == TextData.Length)
+                    break;
+
+                i++;
+
+                try
+                {
+                    switch (TextData[i])
+                    {
+                        case '<':
+                            i++;
+                            int end = TextData.IndexOf('>', i);
+                            string tag = TextData.Substring(i, end - i);
+                            bytes = ProcessControlTag(tag, encoding);
+                            outList.AddRange(bytes);
+                            i = end + 1;
+                            break;
+                        case '\\':
+                            i++;
+                            outList.Add((byte)'\\');
+                            break;
+                    }
+                }
+                catch
+                {
+                    throw new FormatException();
+                }
+            }
+
+            if (m_messageId != 0)
+                outList.Add(0);
+
+            return outList.ToArray();
+        }
+
+        /*private byte[] TextToByteArray(Encoding encoding)
         {
             byte[] output = new byte[1];
 
@@ -502,28 +567,13 @@ namespace WindWakerTextEditor
                     charData.Add(0);
 
             return charData.ToArray();
-        }
+        }*/
 
-        private byte[] ProcessControlTag(List<byte> charData, int i, out int tagSize)
+        private byte[] ProcessControlTag(string tag, Encoding encoding)
         {
             List<byte> tagBuffer = new List<byte>();
 
-            tagSize = 1;
-
-            while (charData[(int)(i + tagSize)] != '>')
-            {
-                tagBuffer.Add(charData[(int)(i + tagSize)]);
-
-                tagSize += 1;
-            }
-
-            //tagSize at this point only covers the text within the angled brackets.
-            //This figures the brackets into the size
-            tagSize += 1;
-
-            string tempTag = new string(Encoding.ASCII.GetChars(tagBuffer.ToArray()));
-
-            string[] tagArgs = tempTag.Split(':');
+            string[] tagArgs = tag.Split(':');
 
             tagArgs[0] = tagArgs[0].ToLower();
 
@@ -538,7 +588,7 @@ namespace WindWakerTextEditor
             {
                 #region Five-Byte Codes
                 case "player":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PlayerName, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PlayerName, 0);
                     break;
 
                 case "draw":
@@ -546,12 +596,12 @@ namespace WindWakerTextEditor
                     {
                         if (tagArgs[1] == "instant")
                         {
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CharDrawInstant, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CharDrawInstant, 0);
                         }
 
                         if (tagArgs[1] == "char")
                         {
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CharDrawByChar, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CharDrawByChar, 0);
                         }
 
                         else
@@ -562,87 +612,87 @@ namespace WindWakerTextEditor
                     break;
 
                 case "two choices":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.TwoChoices, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TwoChoices, 0);
                     break;
 
                 case "three choices":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ThreeChoices, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ThreeChoices, 0);
                     break;
 
                 case "icon":
                     switch (tagArgs[1])
                     {
                         case "a button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AButtonIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AButtonIcon, 0);
                             break;
                         case "b button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BButtonIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BButtonIcon, 0);
                             break;
                         case "c stick":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CStickIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CStickIcon, 0);
                             break;
                         case "d pad":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DPadIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.DPadIcon, 0);
                             break;
                         case "l trigger":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LTriggerIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.LTriggerIcon, 0);
                             break;
                         case "r trigger":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RTriggerIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RTriggerIcon, 0);
                             break;
                         case "x button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.XButtonIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.XButtonIcon, 0);
                             break;
                         case "y button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.YButtonIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.YButtonIcon, 0);
                             break;
                         case "z button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ZButtonIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ZButtonIcon, 0);
                             break;
                         case "control stick (all directions)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
                             break;
                         case "control stick (moving up)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
                             break;
                         case "control stick (moving down)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
                             break;
                         case "control stick (moving left)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
                             break;
                         case "control stick (moving right)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
                             break;
                         case "control stick (moving up+down)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
                             break;
                         case "control stick (moving left+right)":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
                             break;
                         case "left arrow":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.LeftArrowIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.LeftArrowIcon, 0);
                             break;
                         case "right arrow":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RightArrowIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RightArrowIcon, 0);
                             break;
                         case "up arrow":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.UpArrowIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.UpArrowIcon, 0);
                             break;
                         case "down arrow":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.DownArrowIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.DownArrowIcon, 0);
                             break;
                         case "flashing a button":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StarburstAIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StarburstAIcon, 0);
                             break;
                         case "target starburst":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.TargetStarburstIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TargetStarburstIcon, 0);
                             break;
                         case "heart":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.HeartIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.HeartIcon, 0);
                             break;
                         case "music note":
-                            code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.HeartIcon, 0);
+                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.HeartIcon, 0);
                             break;
                     }
                     break;
@@ -650,7 +700,7 @@ namespace WindWakerTextEditor
                 case "control stick":
                     if (tagArgs.Length == 1)
                     {
-                        code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
+                        code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
                     }
 
                     else
@@ -659,27 +709,27 @@ namespace WindWakerTextEditor
                         {
                             #region Direction Switch
                             case "up":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
                                 break;
 
                             case "down":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
                                 break;
 
                             case "left":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
                                 break;
 
                             case "right":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
                                 break;
 
                             case "up+down":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
                                 break;
 
                             case "left+right":
-                                code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
+                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
                                 break;
 
                             default:
@@ -690,174 +740,174 @@ namespace WindWakerTextEditor
                     }
                     break;
 
-                case "choice one":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ChoiceOne, 0);
+                case "first choice":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChoiceOne, 0);
                     break;
 
-                case "choice two":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ChoiceTwo, 0);
+                case "second choice":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChoiceTwo, 0);
                     break;
 
                 case "canon game balls":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CanonGameBalls, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CanonGameBalls, 0);
                     break;
 
                 case "broken vase payment":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BrokenVasePayment, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BrokenVasePayment, 0);
                     break;
 
-                case "auction attendee":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AuctionCharacter, 0);
+                case "auction character":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionCharacter, 0);
                     break;
 
-                case "auction item name":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AuctionItemName, 0);
+                case "auction item":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionItemName, 0);
                     break;
 
-                case "auction attendee bid":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AuctionPersonBid, 0);
+                case "auction bid":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionPersonBid, 0);
                     break;
 
-                case "auction starting bid":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.AuctionStartingBid, 0);
+                case "starting auction bid":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionStartingBid, 0);
                     break;
 
-                case "player auction bid selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PlayerAuctionBidSelector, 0);
+                case "player bid selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PlayerAuctionBidSelector, 0);
                     break;
 
-                case "orca blow count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.OrcaBlowCount, 0);
+                case "blows":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.OrcaBlowCount, 0);
                     break;
 
                 case "pirate ship password":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PirateShipPassword, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PirateShipPassword, 0);
                     break;
 
                 case "player letter count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PostOfficeGamePlayerLetterCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostOfficeGamePlayerLetterCount, 0);
                     break;
 
                 case "letter rupee reward":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PostOfficeGameRupeeReward, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostOfficeGameRupeeReward, 0);
                     break;
 
                 case "letters":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PostBoxLetterCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostBoxLetterCount, 0);
                     break;
 
-                case "remaining koroks":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RemainingKoroks, 0);
+                case "korok count":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RemainingKoroks, 0);
                     break;
 
-                case "remaining forest water time":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.RemainingForestWaterTime, 0);
+                case "forest water time":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RemainingForestWaterTime, 0);
                     break;
 
-                case "flight control game time":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.FlightPlatformGameTime, 0);
+                case "flight platform time":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FlightPlatformGameTime, 0);
                     break;
 
-                case "flight control game record":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.FlightPlatformGameRecord, 0);
+                case "flight platform record":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FlightPlatformGameRecord, 0);
                     break;
 
                 case "beedle points":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BeedlePointCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BeedlePointCount, 0);
                     break;
 
-                case "joy pendant count (ms. marie)":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.JoyPendantCountMsMarie, 0);
+                case "ms. marie joy pendants":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantCountMsMarie, 0);
                     break;
 
-                case "pendant total":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.MsMariePendantTotal, 0);
+                case "ms. marie pendant total":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.MsMariePendantTotal, 0);
                     break;
 
                 case "pig game time":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.PigGameTime, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PigGameTime, 0);
                     break;
 
-                case "sailing game rupee reward":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.SailingGameRupeeReward, 0);
+                case "boating course rupees":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SailingGameRupeeReward, 0);
                     break;
 
                 case "current bomb capacity":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CurrentBombCapacity, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CurrentBombCapacity, 0);
                     break;
 
                 case "current arrow capacity":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.CurrentArrowCapacity, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CurrentArrowCapacity, 0);
                     break;
 
                 case "target letter count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.TargetLetterCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TargetLetterCount, 0);
                     break;
 
                 case "fishman hit count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.FishmanHitCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FishmanHitCount, 0);
                     break;
 
-                case "fishman rupee reward":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.FishmanRupeeReward, 0);
+                case "fishman rupees":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FishmanRupeeReward, 0);
                     break;
 
                 case "boko baba seed count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BokoBabaSeedCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BokoBabaSeedCount, 0);
                     break;
 
                 case "skull necklace count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.SkullNecklaceCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SkullNecklaceCount, 0);
                     break;
 
                 case "chu jelly count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ChuJellyCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChuJellyCount, 0);
                     break;
 
-                case "joy pendant count (beedle)":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.JoyPendantCountBeedle, 0);
+                case "joy pendant count":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantCountBeedle, 0);
                     break;
 
                 case "golden feather count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.GoldenFeatherCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.GoldenFeatherCount, 0);
                     break;
 
                 case "knight's crest count":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.KnightsCrestCount, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.KnightsCrestCount, 0);
                     break;
 
                 case "beedle price offer":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BeedlePriceOffer, 0);
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BeedlePriceOffer, 0);
                     break;
 
-                case "boko baba seed sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.BokoBabaSeedSellSelector, 0);
+                case "boko baba seed selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BokoBabaSeedSellSelector, 0);
                     break;
 
-                case "skull necklace sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.SkullNecklaceSellSelector, 0);
+                case "skull necklace selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SkullNecklaceSellSelector, 0);
                     break;
 
-                case "chu jelly sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.ChuJellySellSelector, 0);
+                case "chu jelly selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChuJellySellSelector, 0);
                     break;
 
-                case "joy pendant sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.JoyPendantSellSelector, 0);
+                case "joy pendant selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantSellSelector, 0);
                     break;
 
-                case "golden feather sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.GoldenFeatherSellSelector, 0);
+                case "golden feather selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.GoldenFeatherSellSelector, 0);
                     break;
 
-                case "knight's crest sell selector":
-                    code = ConvertTagToFiveByteControlCode(i, 0, (byte)FiveByteTypes.KnightsCrestSellSelector, 0);
+                case "knight's crest selector":
+                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.KnightsCrestSellSelector, 0);
                     break;
 
                 case "sound":
                     if (tagArgs.Length > 1)
                     {
-                        code = ConvertTagToFiveByteControlCode(i, 1, 1, Convert.ToInt16(tagArgs[1]));
+                        code = ConvertTagToFiveByteControlCode(1, 1, Convert.ToInt16(tagArgs[1]));
                     }
 
                     else
@@ -866,10 +916,10 @@ namespace WindWakerTextEditor
                     }
                     break;
 
-                case "camera modifier":
+                case "camera":
                     if (tagArgs.Length > 1)
                     {
-                        code = ConvertTagToFiveByteControlCode(i, 2, 2, Convert.ToInt16(tagArgs[1]));
+                        code = ConvertTagToFiveByteControlCode(2, 2, Convert.ToInt16(tagArgs[1]));
                     }
 
                     else
@@ -878,10 +928,10 @@ namespace WindWakerTextEditor
                     }
                     break;
 
-                case "anim":
+                case "animation":
                     if (tagArgs.Length > 1)
                     {
-                        code = ConvertTagToFiveByteControlCode(i, 3, 3, Convert.ToInt16(tagArgs[1]));
+                        code = ConvertTagToFiveByteControlCode(3, 3, Convert.ToInt16(tagArgs[1]));
                     }
 
                     else
@@ -895,12 +945,13 @@ namespace WindWakerTextEditor
                 case "color":
                     if (tagArgs.Length > 1)
                     {
+                        byte[] arg = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
                         code.Add(0x1A);
                         code.Add(0x06);
                         code.Add(0xFF);
                         code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add(Convert.ToByte(tagArgs[1]));
+                        code.Add(arg[1]);
+                        code.Add(arg[0]);
                     }
 
                     else
@@ -1036,7 +1087,26 @@ namespace WindWakerTextEditor
                         //error handling
                     }
                     break;
-                    #endregion
+                case "furigana":
+                    string[] furArgs = tagArgs[1].Split(',');
+                    byte stride = Convert.ToByte(furArgs[0]);
+
+                    int numChars = furArgs[1].Length;
+                    int codeLength = 6 + (2 * numChars);
+
+                    code.Add(0x1A);
+                    code.Add((byte)codeLength);
+                    code.Add(255);
+                    code.Add(0);
+                    code.Add(2);
+                    code.Add(stride);
+
+                    byte[] charBytes = encoding.GetBytes(furArgs[1]);
+                    code.AddRange(charBytes);
+                    break;
+                #endregion
+                default:
+                    break;
             }
 
             return code.ToArray();
@@ -1116,7 +1186,34 @@ namespace WindWakerTextEditor
             return m_controlCodeString;
         }
 
-        public List<byte> ConvertTagToFiveByteControlCode(int startIndex, byte field2Type, byte normalType, short arg)
+        private string GetFuriganaControlTag(EndianBinaryReader reader, int codeSize, Encoding encoding)
+        {
+            List<char> tagList = new List<char>();
+            tagList.AddRange("\\<furigana:");
+            codeSize -= 6;
+
+            reader.SkipByte();
+
+            short type = reader.ReadInt16();
+
+            if (type != 2)
+                throw new Exception("Furigana tag type was not 2!");
+
+            byte characterStride = reader.ReadByte();
+            tagList.AddRange($"{ characterStride },");
+
+            while (codeSize > 0)
+            {
+                byte[] newChar = reader.ReadBytes(2);
+                tagList.AddRange(encoding.GetChars(newChar));
+                codeSize -= 2;
+            }
+
+            tagList.Add('>');
+            return new string(tagList.ToArray());
+        }
+
+        public List<byte> ConvertTagToFiveByteControlCode(byte field2Type, byte normalType, short arg)
         {
             List<byte> code = new List<byte>();
 
@@ -1133,21 +1230,7 @@ namespace WindWakerTextEditor
                     code.Add(normalType);
                     break;
                 case 1:
-                    code.Add(field2Type);
-
-                    temp = BitConverter.GetBytes(Convert.ToInt16(arg));
-
-                    code.Add(temp[1]);
-                    code.Add(temp[0]);
-                    break;
                 case 2:
-                    code.Add(field2Type);
-
-                    temp = BitConverter.GetBytes(Convert.ToInt16(arg));
-
-                    code.Add(temp[1]);
-                    code.Add(temp[0]);
-                    break;
                 case 3:
                     code.Add(field2Type);
 
