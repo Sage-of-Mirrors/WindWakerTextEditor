@@ -12,7 +12,12 @@
         <view:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </Window.Resources>
     <Grid>
-        <DockPanel VerticalAlignment="Top" Height="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="44*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="63*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel VerticalAlignment="Top" Height="20" Grid.ColumnSpan="3">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open" Command="{Binding OnRequestOpenFile}"/>
@@ -35,10 +40,10 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-        <DockPanel LastChildFill="true" Margin="0,20,498,34">
+        <DockPanel LastChildFill="true" Margin="0,20,0,10">
             <Grid>
-                <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="10,10,10,0" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" Height="24" VerticalAlignment="Top"/>
-                <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,10,10" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
+                <xctk:WatermarkTextBox x:Name="SearchTextBox" Watermark="Type to search..." Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsDataLoaded}" Height="24" VerticalAlignment="Top"/>
+                <ListView x:Name="TextListView" Grid.Column="0" Margin="10,39,0,0" ItemsSource="{Binding ColViewSource.View, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedMessage, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" UseLayoutRounding="True" ScrollViewer.CanContentScroll="True">
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Add message" Command="{Binding OnRequestAddMessage}"/>
@@ -55,7 +60,8 @@
                 </ListView>
             </Grid>
         </DockPanel>
-        <DockPanel LastChildFill="True" Margin="0,395,10,10" HorizontalAlignment="Right" Width="488">
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Margin="1,0"/>
+        <DockPanel LastChildFill="True" Margin="0,395,10,10" Grid.Column="2">
             <Grid>
                 <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="2,0,0,0" BorderThickness="2">
                     <TextBox.ContextMenu>
@@ -112,43 +118,60 @@
                 </TextBox>
             </Grid>
         </DockPanel>
-        <DockPanel LastChildFill="True" Margin="0,40,10,0" Width="488" HorizontalAlignment="Right" Height="360" VerticalAlignment="Top">
+        <DockPanel LastChildFill="True" Margin="2,40,10,0" Height="360" VerticalAlignment="Top" Grid.Column="2">
             <Grid>
-                <GroupBox Header="Textbox Options" Margin="0,10,0,200">
-                    <Grid Margin="0,0,0,-6">
-                        <ComboBox x:Name="BoxTypeCombo" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Margin="0,14,226,0" VerticalAlignment="Top" Width="174" SelectedItem="{Binding SelectedMessage.TextBoxType}"/>
-                        <ComboBox x:Name="DrawTypeBox" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Margin="0,55,226,0" VerticalAlignment="Top" Width="134" SelectedItem="{Binding SelectedMessage.InitialDrawType}"/>
-                        <Label Content="Box Type:" HorizontalAlignment="Right" Margin="0,10,405,0" VerticalAlignment="Top"/>
-                        <Label Content="Initial Draw Type:" HorizontalAlignment="Right" Margin="0,51,365,0" VerticalAlignment="Top"/>
-                        <Label Content="Box Position:" HorizontalAlignment="Right" Margin="0,10,143,0" VerticalAlignment="Top"/>
-                        <ComboBox x:Name="BoxPositionCombo" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Width="128" SelectedItem="{Binding SelectedMessage.TextBoxPosition}"/>
-                        <Label Content="Lines per Box:" HorizontalAlignment="Right" Margin="0,51,138,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,54,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top" Width="123"/>
-                        <Label Content="Item ID:" HorizontalAlignment="Right" Margin="0,89,415,0" VerticalAlignment="Top"/>
-                        <ComboBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemIDBox" HorizontalAlignment="Right" Margin="0,93,226,0" VerticalAlignment="Top" Width="184" SelectedItem="{Binding SelectedMessage.DisplayItemId}"/>
+                <GroupBox Header="Textbox Options" Margin="0,10,0,205">
+                    <Grid Margin="0,0,-2,-6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="BoxTypeCombo" Grid.Column="0" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.TextBoxType}" Height="25"/>
+                        <ComboBox x:Name="DrawTypeBox" Grid.Column="0" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.InitialDrawType}" Height="24"/>
+                        <Label Content="Box Type:" Grid.Column="0" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="60"/>
+                        <Label Content="Initial Draw Type:" Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="101"/>
+                        <Label Content="Box Position:" Grid.Column="1" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="78"/>
+                        <ComboBox x:Name="BoxPositionCombo" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="99,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.TextBoxPosition}" Height="25" Grid.Column="1"/>
+                        <Label Grid.Column="1" Grid.Row="1" Content="Lines per Box:" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="84"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="25" Margin="99,9,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top"/>
+                        <Label Content="Item ID:" Grid.Column="0" Grid.Row="2" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="51"/>
+                        <ComboBox Grid.Column="0" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemIDBox" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.DisplayItemId}" Height="25"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Misc." Margin="0,160,0,10">
                     <Grid>
-                        <Label Content="Unknown1:" HorizontalAlignment="Right" Margin="0,10,392,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,13,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top" Width="137"/>
-                        <Label Content="Initial Sound:" Margin="0,10,139,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="79"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,13,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="124" Text="{Binding SelectedMessage.InitialSound}"/>
-                        <Label Content="Initial Camera:" HorizontalAlignment="Right" Margin="0,41,133,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,44,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="118" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
-                        <Label Content="Initial Animation:" HorizontalAlignment="Right" Margin="0,78,119,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,81,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="104" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
-                        <Label Content="Item Price:" HorizontalAlignment="Right" Margin="0,41,396,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemPriceBox" HorizontalAlignment="Right" Height="23" Margin="0,44,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.ItemPrice}" VerticalAlignment="Top" Width="141"/>
-                        <Label Content="Next Message:" HorizontalAlignment="Right" Margin="0,78,374,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="NextMessageBox" HorizontalAlignment="Right" Height="23" Margin="0,81,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NextMessageID}" VerticalAlignment="Top" Width="119"/>
-                        <Label Content="Unknown4:" HorizontalAlignment="Right" Margin="0,116,392,0" VerticalAlignment="Top"/>
-                        <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" HorizontalAlignment="Right" Height="23" Margin="0,119,250,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top" Width="137"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Unknown1:" Grid.Column="0" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="70"/>
+                        <TextBox Grid.Column="0" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top"/>
+                        <Label Content="Initial Sound:" Grid.Column="1" Grid.Row="0" Margin="10,10,0,6" HorizontalAlignment="Left" Width="79"/>
+                        <TextBox Grid.Column="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="114,10,10,10" TextWrapping="Wrap" Text="{Binding SelectedMessage.InitialSound}"/>
+                        <Label Content="Initial Camera:" Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="85"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="114,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
+                        <Label Grid.Column="1" Grid.Row="2" Content="Initial Animation:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="99"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="114,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
+                        <Label Grid.Column="0" Grid.Row="1" Content="Item Price:" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="70"/>
+                        <TextBox Grid.Column="0" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemPriceBox" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.ItemPrice}" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="2" Content="Next Message:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="88"/>
+                        <TextBox Grid.Column="0" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="NextMessageBox" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NextMessageID}" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="3" Content="Unknown4:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="70"/>
+                        <TextBox Grid.Column="0" Grid.Row="3" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top"/>
                     </Grid>
                 </GroupBox>
             </Grid>
         </DockPanel>
-        <Button Content="Add" Command="{Binding OnRequestAddMessage}" Margin="10,0,684,5" Height="29" VerticalAlignment="Bottom"/>
-        <Button Content="Delete" Command="{Binding OnRequestRemoveMessage}" Margin="0,0,507,5" Height="29" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="172"/>
     </Grid>
 </Window>
