@@ -117,9 +117,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\EndianBinaryStreams.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="lib\EndianBinaryStreams.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.Themes.Aero.dll" />
     <Content Include="lib\Xceed.Wpf.AvalonDock.Themes.Metro.dll" />
