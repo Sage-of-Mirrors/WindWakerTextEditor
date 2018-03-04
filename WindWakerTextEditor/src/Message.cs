@@ -18,7 +18,6 @@ namespace WindWakerTextEditor
         }
 
         private int m_textDataOffset;
-
         private int m_index;
 
         public int Index
@@ -381,11 +380,6 @@ namespace WindWakerTextEditor
 
         public void ReadTextData(EndianBinaryReader reader, Encoding encoding)
         {
-            if (MessageId == 160)
-            {
-
-            }
-
             List<byte> charList = new List<byte>();
 
             byte nextByte = reader.ReadByte();
@@ -457,11 +451,6 @@ namespace WindWakerTextEditor
 
         private byte[] TextToByteArray(Encoding encoding)
         {
-            if (MessageId == 7401)
-            {
-
-            }
-
             List<byte> outList = new List<byte>();
 
             int i = 0;
@@ -509,6 +498,53 @@ namespace WindWakerTextEditor
                 outList.Add(0);
 
             return outList.ToArray();
+        }
+
+        public bool TestControlTagsValid(Encoding encoding)
+        {
+            int i = 0;
+
+            while (i < TextData.Length)
+            {
+                int index = TextData.IndexOf('\\', i);
+                int count = ((index < 0 ? TextData.Length : index) - i);
+
+                i += count;
+
+                if (i == TextData.Length)
+                    break;
+
+                i++;
+
+                try
+                {
+                    switch (TextData[i])
+                    {
+                        case '<':
+                            i++;
+                            int end = TextData.IndexOf('>', i);
+                            if (end < 0)
+                                return false;
+
+                            string tag = TextData.Substring(i, end - i);
+                            byte[] asTag = ProcessControlTag(tag, encoding);
+                            if (asTag.Length == 0)
+                                return false;
+
+                            i = end + 1;
+                            break;
+                        case '\\':
+                            i++;
+                            break;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /*private byte[] TextToByteArray(Encoding encoding)
@@ -1106,7 +1142,7 @@ namespace WindWakerTextEditor
                     break;
                 #endregion
                 default:
-                    break;
+                    return new byte[0];
             }
 
             return code.ToArray();

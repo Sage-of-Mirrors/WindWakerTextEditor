@@ -20,10 +20,17 @@ namespace WindWakerTextEditor.View
 
         private string m_loadedFileName;
         private string m_searchFilter;
+        private string m_errorLabelContent;
         private bool m_isDataLoaded;
         private bool m_isCompressed;
+        private System.Windows.Visibility m_errorLabelVisible;
         private int m_listboxSelectedIndex;
         private int m_textBoxPos;
+
+        public ViewModel()
+        {
+            ErrorLabelVisible = System.Windows.Visibility.Hidden;
+        }
 
         private void Open()
         {

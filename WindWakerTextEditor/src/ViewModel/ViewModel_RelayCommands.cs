@@ -51,6 +51,11 @@ namespace WindWakerTextEditor.View
             get { return new RelayCommand(x => OpenWebPage((string)x), x => true); }
         }
 
+        public ICommand OnLeaveMessageTextbox
+        {
+            get { return new RelayCommand(x => TestMessageControlTags(), x => IsDataLoaded == true); }
+        }
+
         public void CloseCurrentFile()
         {
             m_colViewSource.Source = null;
@@ -75,6 +80,21 @@ namespace WindWakerTextEditor.View
         private void OnInsert(string code)
         {
             m_selectedMessage.TextData = m_selectedMessage.TextData.Insert(m_textBoxPos, string.Format("\\<{0}>", code));
+        }
+
+        public void TestMessageControlTags()
+        {
+            bool valid = m_selectedMessage.TestControlTagsValid(LoadedTextFile.Encoding);
+
+            if (!valid)
+            {
+                ErrorLabelContent = $"Message at index { m_selectedMessage.Index } has invalid control tag(s).";
+                ErrorLabelVisible = Visibility.Visible;
+            }
+            else
+            {
+                ErrorLabelVisible = Visibility.Hidden;
+            }
         }
     }
 }

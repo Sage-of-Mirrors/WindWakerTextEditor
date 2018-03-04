@@ -63,7 +63,7 @@
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Margin="1,0"/>
         <DockPanel LastChildFill="True" Margin="0,395,10,10" Grid.Column="2">
             <Grid>
-                <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="2,0,0,0" BorderThickness="2">
+                <TextBox IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding SelectedMessage.TextData, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="TextBox_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="2,0,0,0" BorderThickness="2" LostFocus="TextBox_LostFocus">
                     <TextBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="ApplicationCommands.Cut"/>
@@ -118,9 +118,9 @@
                 </TextBox>
             </Grid>
         </DockPanel>
-        <DockPanel LastChildFill="True" Margin="2,40,10,0" Height="360" VerticalAlignment="Top" Grid.Column="2">
+        <DockPanel LastChildFill="True" Margin="2,20,10,0" Height="360" VerticalAlignment="Top" Grid.Column="2">
             <Grid>
-                <GroupBox Header="Textbox Options" Margin="0,10,0,205">
+                <GroupBox Header="Textbox Options" Margin="0,0,0,212">
                     <Grid Margin="0,0,-2,-6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -143,7 +143,7 @@
                         <ComboBox Grid.Column="0" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemIDBox" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.DisplayItemId}" Height="25"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Misc." Margin="0,160,0,10">
+                <GroupBox Header="Misc." Margin="0,153,0,17">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -173,5 +173,6 @@
                 </GroupBox>
             </Grid>
         </DockPanel>
+        <Label Content="{Binding ErrorLabelContent}" Visibility="{Binding ErrorLabelVisible}" Grid.Column="2"  Margin="0,362,10,188" Foreground="Red"/>
     </Grid>
 </Window>

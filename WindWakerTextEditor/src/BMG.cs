@@ -32,6 +32,11 @@ namespace WindWakerTextEditor
             }
         }
 
+        public Encoding Encoding
+        {
+            get { return m_Encoding; }
+        }
+
         public BMG(EndianBinaryReader reader)
         {
             MessageList = new ObservableCollection<Message>();

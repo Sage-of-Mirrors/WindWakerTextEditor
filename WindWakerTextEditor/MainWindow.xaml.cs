@@ -41,5 +41,11 @@ namespace WindWakerTextEditor
             TextBox box = sender as TextBox;
             view.TextBoxPos = box.SelectionStart;
         }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ViewModel model = DataContext as ViewModel;
+            model.TestMessageControlTags();
+        }
     }
 }

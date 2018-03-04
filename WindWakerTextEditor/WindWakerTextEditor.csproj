@@ -7,8 +7,8 @@
     <ProjectGuid>{F2DBCC26-3F2D-494A-BC59-08E072807820}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WPFTextEditor</RootNamespace>
-    <AssemblyName>GC Zelda Text Editor</AssemblyName>
+    <RootNamespace>WindWakerTextEditor</RootNamespace>
+    <AssemblyName>Wind Waker Text Editor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

@@ -139,5 +139,31 @@ namespace WindWakerTextEditor.View
                 }
             }
         }
+
+        public System.Windows.Visibility ErrorLabelVisible
+        {
+            get { return m_errorLabelVisible; }
+            set
+            {
+                if (m_errorLabelVisible != value)
+                {
+                    m_errorLabelVisible = value;
+                    NotifyPropertyChanged("ErrorLabelVisible");
+                }
+            }
+        }
+
+        public string ErrorLabelContent
+        {
+            get { return m_errorLabelContent; }
+            set
+            {
+                if (m_errorLabelContent != value)
+                {
+                    m_errorLabelContent = value;
+                    NotifyPropertyChanged("ErrorLabelContent");
+                }
+            }
+        }
     }
 }
