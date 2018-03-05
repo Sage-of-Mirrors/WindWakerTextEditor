@@ -112,7 +112,7 @@ namespace WindWakerTextEditor
 
             switch (m_Encoding.WebName)
             {
-                case "windows-1252":
+                case "Windows-1252":
                     writer.Write((byte)1);
                     break;
                 case "BigEndianUnicode":
@@ -159,6 +159,9 @@ namespace WindWakerTextEditor
 
             for (int i = 0; i < messageDataList.Count; i++)
             {
+                if (m_messageList[i].MessageId == 0)
+                    continue;
+
                 writer.BaseStream.Seek((0x30 + (i * 0x18)), 0); // Seek to the text data offset field at (size of file header and INF1 header + (currentEntry * entryLength))
                 writer.Write(textOffset); // Write text data offset
                 textOffset += messageDataList[i].Length; // Add current data length to text offset
