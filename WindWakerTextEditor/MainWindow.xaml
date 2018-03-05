@@ -133,13 +133,13 @@
                         </Grid.RowDefinitions>
                         <ComboBox x:Name="BoxTypeCombo" Grid.Column="0" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.TextBoxType}" Height="25"/>
                         <ComboBox x:Name="DrawTypeBox" Grid.Column="0" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.InitialDrawType}" Height="24"/>
-                        <Label Content="Box Type:" Grid.Column="0" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="60"/>
-                        <Label Content="Initial Draw Type:" Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="101"/>
-                        <Label Content="Box Position:" Grid.Column="1" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="78"/>
+                        <Label Content="Box Type:" ToolTip="The type of textbox that the message will appear in." Grid.Column="0" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="60"/>
+                        <Label Content="Initial Draw Type:" ToolTip="The draw type (by char or instant) that the message will begin drawing with." Grid.Column="0" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="101"/>
+                        <Label Content="Box Position:" ToolTip="The position of the textbox on the screen." Grid.Column="1" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="78"/>
                         <ComboBox x:Name="BoxPositionCombo" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="99,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.TextBoxPosition}" Height="25" Grid.Column="1"/>
-                        <Label Grid.Column="1" Grid.Row="1" Content="Lines per Box:" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="84"/>
+                        <Label Grid.Column="1" Grid.Row="1" Content="Lines per Box:" ToolTip="The number of lines the textbox shows before the text must scroll to another textbox." Margin="10,10,0,0" VerticalAlignment="Top" Height="29" HorizontalAlignment="Left" Width="84"/>
                         <TextBox Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="25" Margin="99,9,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NumLinesPerBox}" VerticalAlignment="Top"/>
-                        <Label Content="Item ID:" Grid.Column="0" Grid.Row="2" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="51"/>
+                        <Label Content="Item ID:" ToolTip="If Box Type is Item_Get, this is the item image to be displayed on the left side of the textbox." Grid.Column="0" Grid.Row="2" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="51"/>
                         <ComboBox Grid.Column="0" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemIDBox" Margin="117,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedMessage.DisplayItemId}" Height="25"/>
                     </Grid>
                 </GroupBox>
@@ -156,19 +156,19 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Label Content="Unknown1:" Grid.Column="0" Grid.Row="0" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="70"/>
-                        <TextBox Grid.Column="0" Grid.Row="0" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top"/>
-                        <Label Content="Initial Sound:" Grid.Column="1" Grid.Row="0" Margin="10,10,0,6" HorizontalAlignment="Left" Width="79"/>
+                        <TextBox Grid.Column="0" Grid.Row="0" IsEnabled="False" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownBool1}" VerticalAlignment="Top"/>
+                        <Label Content="Initial Sound:" ToolTip="The sound to play when the textbox opens. A value of 0 indicates no sound." Grid.Column="1" Grid.Row="0" Margin="10,10,0,6" HorizontalAlignment="Left" Width="79"/>
                         <TextBox Grid.Column="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Margin="114,10,10,10" TextWrapping="Wrap" Text="{Binding SelectedMessage.InitialSound}"/>
-                        <Label Content="Initial Camera:" Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="85"/>
+                        <Label Content="Initial Camera:" ToolTip="The camera behavior to use when the textbox opens. A value of 0 indicates no movement." Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="85"/>
                         <TextBox Grid.Column="1" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="114,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding SelectedMessage.InitialCameraBehavior}"/>
-                        <Label Grid.Column="1" Grid.Row="2" Content="Initial Animation:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="99"/>
+                        <Label Grid.Column="1" Grid.Row="2" ToolTip="The animation for the speaker to perform when the textbox opens. A value of 0 indicates no animation." Content="Initial Animation:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="99"/>
                         <TextBox Grid.Column="1" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="114,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding SelectedMessage.InitialSpeakerAnim}"/>
-                        <Label Grid.Column="0" Grid.Row="1" Content="Item Price:" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="70"/>
+                        <Label Grid.Column="0" Grid.Row="1" ToolTip="If the message is for buying an item, this value indicates how many Rupees will be deducted from Link's wallet." Content="Item Price:" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="70"/>
                         <TextBox Grid.Column="0" Grid.Row="1" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="ItemPriceBox" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.ItemPrice}" VerticalAlignment="Top"/>
-                        <Label Grid.Column="0" Grid.Row="2" Content="Next Message:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="88"/>
-                        <TextBox Grid.Column="0" Grid.Row="2" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" x:Name="NextMessageBox" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NextMessageID}" VerticalAlignment="Top"/>
+                        <Label Grid.Column="0" Grid.Row="2" Content="Unknown3:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="70"/>
+                        <TextBox Grid.Column="0" Grid.Row="2" IsEnabled="False" x:Name="NextMessageBox" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.NextMessageID}" VerticalAlignment="Top"/>
                         <Label Grid.Column="0" Grid.Row="3" Content="Unknown4:" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" HorizontalAlignment="Left" Width="70"/>
-                        <TextBox Grid.Column="0" Grid.Row="3" IsEnabled="{Binding SelectedMessage, Converter={StaticResource NullToFalseConverter}}" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="0" Grid.Row="3" IsEnabled="False" Height="22" Margin="103,10,10,0" TextWrapping="Wrap" Text="{Binding SelectedMessage.UnknownField3}" VerticalAlignment="Top"/>
                     </Grid>
                 </GroupBox>
             </Grid>
