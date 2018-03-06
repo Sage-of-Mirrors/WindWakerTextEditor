@@ -43,7 +43,7 @@ namespace WindWakerTextEditor.View
             get { return m_selectedMessage; }
             set
             {
-                if (value != m_selectedMessage)
+                if (value != m_selectedMessage && m_updateSelected)
                 {
                     m_selectedMessage = value;
 
@@ -121,7 +121,7 @@ namespace WindWakerTextEditor.View
                 if (!string.IsNullOrEmpty(SearchFilter))
                     AddFilter();
 
-                ColViewSource.View.Refresh();
+                //ColViewSource.View.Refresh();
 
                 NotifyPropertyChanged("SearchFilter");
             }

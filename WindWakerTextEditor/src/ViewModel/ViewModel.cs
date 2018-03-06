@@ -23,6 +23,8 @@ namespace WindWakerTextEditor.View
         private string m_errorLabelContent;
         private bool m_isDataLoaded;
         private bool m_isCompressed;
+        private bool m_updateSelected = true;
+        private bool colorEditorOpen;
         private System.Windows.Visibility m_errorLabelVisible;
         private int m_listboxSelectedIndex;
         private int m_textBoxPos;
@@ -178,8 +180,10 @@ namespace WindWakerTextEditor.View
 
         private void AddFilter()
         {
+            m_updateSelected = false;
             ColViewSource.Filter -= new FilterEventHandler(Filter);
             ColViewSource.Filter += new FilterEventHandler(Filter);
+            m_updateSelected = true;
         }
 
         private void Filter(object sender, FilterEventArgs e)
