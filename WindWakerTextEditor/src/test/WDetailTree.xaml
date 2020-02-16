@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="WindEditor.View.WDetailTree"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WindEditor.View"
+             xmlns:vm="clr-namespace:WindEditor.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="200">
+    <Grid Grid.IsSharedSizeScope="True">
+        <DockPanel LastChildFill="True">
+            <StackPanel Orientation="Vertical" x:Name="WDetailTreeView" >
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:WDetailCategoryRow DataContext="{Binding Value}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

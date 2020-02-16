@@ -160,7 +160,14 @@ namespace WindWakerTextEditor
             for (int i = 0; i < messageDataList.Count; i++)
             {
                 if (m_messageList[i].MessageId == 0)
+                {
+                    for (int j = 0; j < 6; j++)
+                    {
+                        writer.Write((int)0);
+                    }
+
                     continue;
+                }
 
                 writer.BaseStream.Seek((0x30 + (i * 0x18)), 0); // Seek to the text data offset field at (size of file header and INF1 header + (currentEntry * entryLength))
                 writer.Write(textOffset); // Write text data offset

@@ -56,6 +56,11 @@ namespace WindWakerTextEditor.View
             get { return new RelayCommand(x => TestMessageControlTags(), x => IsDataLoaded == true); }
         }
 
+        public ICommand OnRequestOpenColorEditor
+        {
+            get { return new RelayCommand(x => OnOpenColorEditor(), x => colorEditorOpen == false && m_isDataLoaded == true); }
+        }
+
         public void CloseCurrentFile()
         {
             m_colViewSource.Source = null;
@@ -80,6 +85,14 @@ namespace WindWakerTextEditor.View
         private void OnInsert(string code)
         {
             m_selectedMessage.TextData = m_selectedMessage.TextData.Insert(m_textBoxPos, string.Format("\\<{0}>", code));
+        }
+
+        private void OnOpenColorEditor()
+        {
+            ColorEditor editor = new ColorEditor();
+            ColorEditor_ViewModel colorView = editor.DataContext as ColorEditor_ViewModel;
+            colorView.SetFile(LoadedColorFile);
+            editor.Show();
         }
 
         public void TestMessageControlTags()

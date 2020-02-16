@@ -6,16 +6,31 @@ using System.Threading.Tasks;
 using System.Drawing;
 using GameFormatReader.Common;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using WindEditor;
 
 namespace WindWakerTextEditor
 {
-    public class BMC
+    public class BMC : INotifyPropertyChanged
     {
-        ObservableCollection<Color> m_colorList;
+        private ObservableCollection<WLinearColor> m_colorList;
+
+        public ObservableCollection<WLinearColor> ColorList
+        {
+            get { return m_colorList; }
+            set
+            {
+                if (m_colorList != value)
+                {
+                    m_colorList = value;
+                    NotifyPropertyChanged("ColorList");
+                }
+            }
+        }
 
         public BMC(EndianBinaryReader reader)
         {
-            m_colorList = new ObservableCollection<Color>();
+            m_colorList = new ObservableCollection<WLinearColor>();
 
             string magic = new string(reader.ReadChars(8));
 
@@ -36,7 +51,7 @@ namespace WindWakerTextEditor
 
             for (ushort i = 0; i < numColors; i++)
             {
-                Color newCol = Color.FromArgb(255, reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                WLinearColor newCol = new WLinearColor(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), 255);
                 reader.SkipByte(); // Colors are stored in RGBA format, so we skip the A component
 
                 m_colorList.Add(newCol);
@@ -55,7 +70,7 @@ namespace WindWakerTextEditor
             writer.Write((ushort)m_colorList.Count);
             writer.Write((ushort)0);
 
-            foreach (Color col in m_colorList)
+            foreach (WLinearColor col in m_colorList)
             {
                 writer.Write((byte)col.R);
                 writer.Write((byte)col.G);
@@ -71,5 +86,19 @@ namespace WindWakerTextEditor
             writer.BaseStream.Seek(8, 0);
             writer.Write((int)writer.BaseStream.Length);
         }
+
+        #region NotifyPropertyChanged Stuff
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(String info)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+
+        #endregion
     }
 }

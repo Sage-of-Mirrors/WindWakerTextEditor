@@ -30,7 +30,10 @@
                     <MenuItem Header="Add Message" Command="{Binding OnRequestAddMessage}"/>
                     <MenuItem Header="Delete Selected Message" Command="{Binding OnRequestRemoveMessage}"/>
                 </MenuItem>
-                <MenuItem Header="Options">
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Color Editor" Command="{Binding OnRequestOpenColorEditor}"/>
+                </MenuItem>
+                <MenuItem Header="_Options">
                     <MenuItem Header="Compress on Save" IsCheckable="True" IsChecked="{Binding IsCompressed}"/>
                 </MenuItem>
                 <MenuItem Header="_Help">

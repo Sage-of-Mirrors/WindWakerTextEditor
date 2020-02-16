@@ -65,17 +65,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorEditor.xaml.cs">
+      <DependentUpon>ColorEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="src\BMC.cs" />
     <Compile Include="src\BMG.cs" />
+    <Compile Include="src\Color32.cs" />
     <Compile Include="src\Enums\ControlCodeEnums.cs" />
     <Compile Include="src\Enums\TextBoxEnums.cs" />
     <Compile Include="src\Enums\ItemIDEnum.cs" />
+    <Compile Include="src\LinearColor.cs" />
     <Compile Include="src\Message.cs" />
+    <Compile Include="src\test\Attributes.cs" />
+    <Compile Include="src\test\IMinitor.cs" />
+    <Compile Include="src\test\IPropertyTypeCustomization.cs" />
+    <Compile Include="src\test\Message.cs" />
+    <Compile Include="src\test\MessageTextValidationRule.cs" />
+    <Compile Include="src\test\NullToBoolConverter.cs" />
+    <Compile Include="src\test\RelayCommand.cs" />
+    <Compile Include="src\test\TextMinitor.cs" />
+    <Compile Include="src\test\TextMinitorEnums.cs" />
+    <Compile Include="src\test\TextMinitorWindow.xaml.cs" />
+    <Compile Include="src\test\TypeCustomization\BooleanTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\ByteTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\EnumTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\IntegerTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\ShortTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\SingleTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\StringTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\UIntegerTypeCustomization.cs" />
+    <Compile Include="src\test\TypeCustomization\UShortTypeCustomization.cs" />
+    <Compile Include="src\test\WDetailCategoryRow.xaml.cs" />
+    <Compile Include="src\test\WDetailsCategoryRowViewModel.cs" />
+    <Compile Include="src\test\WDetailSingleRow.xaml.cs" />
+    <Compile Include="src\test\WDetailSingleRowViewModel.cs" />
+    <Compile Include="src\test\WDetailsView.xaml.cs" />
+    <Compile Include="src\test\WDetailsViewViewModel.cs" />
+    <Compile Include="src\test\WDetailTree.xaml.cs" />
+    <Compile Include="src\ViewModel\ColorEditor_ViewModel.cs" />
     <Compile Include="src\ViewModel\RelayCommand.cs" />
     <Compile Include="src\ViewModel\ViewModel.cs" />
     <Compile Include="src\ViewModel\ViewModel_RelayCommands.cs" />
     <Compile Include="src\ViewModel\NullToFalseConverter.cs" />
     <Compile Include="src\ViewModel\ViewModel_Properties.cs" />
+    <Page Include="ColorEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,6 +124,26 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="src\test\TextMinitorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="src\test\WDetailCategoryRow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="src\test\WDetailSingleRow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="src\test\WDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="src\test\WDetailTree.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

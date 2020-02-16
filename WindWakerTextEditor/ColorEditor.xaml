@@ -1,0 +1,24 @@
+﻿<Window x:Class="WindWakerTextEditor.ColorEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindWakerTextEditor"
+        xmlns:view="clr-namespace:WindWakerTextEditor.View"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Color Editor" Height="306.68" Width="394.744" ResizeMode="NoResize">
+    <Window.DataContext>
+        <view:ColorEditor_ViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="38*"/>
+        </Grid.ColumnDefinitions>
+        <ListView Grid.Column="0" HorizontalAlignment="Right" Width="137" Height="278" VerticalAlignment="Top" ItemsSource="{Binding ColorFile.ColorList}" SelectedItem="{Binding SelectedColor, UpdateSourceTrigger=PropertyChanged}"/>
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5"/>
+        <xctk:ColorCanvas Grid.Column="2" R="{Binding SelectedColor.R, UpdateSourceTrigger=PropertyChanged}" G="{Binding SelectedColor.G}" B="{Binding SelectedColor.B}"/>
+    </Grid>
+</Window>
