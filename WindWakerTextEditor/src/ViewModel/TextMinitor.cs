@@ -69,12 +69,31 @@ namespace WindEditor.Minitors
 
         private string m_OpenFilePath;
 
+        public static Dictionary<char, char> CharacterRemap;
+
         public ICommand OpenMinitorCommand { get { return new RelayCommand(x => OnRequestOpenFile()); } }
         public ICommand OpenFileCommand { get { return new RelayCommand(x => OnRequestOpenFile()); } }
-        public ICommand ExportCSVCommand { get { return new RelayCommand(x => OnRequestExportCSV()); } }
-        public ICommand SaveMessageDataCommand { get { return new RelayCommand(x => OnRequestSaveMessageData()); } }
-        public ICommand SaveMessageDataAsCommand { get { return new RelayCommand(x => OnRequestSaveMessageDataAs()); } }
-        public ICommand AddMessageCommand { get { return new RelayCommand(x => OnRequestAddMessage()); } }
+        public ICommand ExportCSVCommand { get { return new RelayCommand(x => OnRequestExportCSV(), x => Messages != null); } }
+        public ICommand SaveMessageDataCommand { get { return new RelayCommand(x => OnRequestSaveMessageData(), x => Messages != null); } }
+        public ICommand SaveMessageDataAsCommand { get { return new RelayCommand(x => OnRequestSaveMessageDataAs(), x => Messages != null); } }
+        public ICommand AddMessageCommand { get { return new RelayCommand(x => OnRequestAddMessage(), x => Messages != null); } }
+
+        public TextMinitor()
+        {
+            CharacterRemap = new Dictionary<char, char>();
+            CharacterRemap.Add((char)0x84, 'Ğ');
+            CharacterRemap.Add((char)0x85, 'Ž');
+            CharacterRemap.Add((char)0x86, 'Š');
+            CharacterRemap.Add((char)0x87, 'Ą');
+            CharacterRemap.Add((char)0x88, 'Į');
+            CharacterRemap.Add((char)0x89, 'ğ');
+            CharacterRemap.Add((char)0x8A, 'ž');
+            CharacterRemap.Add((char)0x8B, 'š');
+            CharacterRemap.Add((char)0x8C, 'ą');
+            CharacterRemap.Add((char)0x8D, 'į');
+            CharacterRemap.Add((char)0x8E, 'Ų');
+            CharacterRemap.Add((char)0x8F, 'ų');
+        }
 
         public List<Message> Messages
         {

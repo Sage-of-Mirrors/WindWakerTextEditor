@@ -4,1280 +4,476 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
-using System.IO;
 using GameFormatReader.Common;
-using System.Collections.ObjectModel;
 
-namespace WindWakerTextEditor
+namespace WindEditor.Minitors.Text
 {
-    public class Message : INotifyPropertyChanged
+    [HideCategories(new string[] { })]
+    public class Message
     {
-        public int TextDataOffset
+        #region INotifyPropertyChanged Interface
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
         {
-            get { return m_textDataOffset; }
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        [WProperty("Textbox", "Style", true, "The style of the box containing the text.")]
+        public BoxType TextboxType
+        {
+            get { return m_TextboxType; }
+            set
+            {
+                if (value != m_TextboxType)
+                {
+                    m_TextboxType = value;
+                    OnPropertyChanged("TextboxType");
+                }
+            }
         }
 
-        private int m_textDataOffset;
-        private int m_index;
+        [WProperty("Textbox", "Draw Type", true, "The way the text is initially rendered to the screen - typed out letter by letter or all of it at once.")]
+        public DrawType DrawType
+        {
+            get { return m_DrawType; }
+            set
+            {
+                if (value != m_DrawType)
+                {
+                    m_DrawType = value;
+                    OnPropertyChanged("DrawType");
+                }
+            }
+        }
+
+        [WProperty("Textbox", "Screen Position", true, "The position of the textbox on the screen.")]
+        public BoxPosition TextboxPosition
+        {
+            get { return m_TextboxPosition; }
+            set
+            {
+                if (value != m_TextboxPosition)
+                {
+                    m_TextboxPosition = value;
+                    OnPropertyChanged("TextboxPosition");
+                }
+            }
+        }
+
+        [WProperty("Textbox", "Item Image", true, "The item image to display if the Textbox Type is Get Item.")]
+        public ItemID ItemImage
+        {
+            get { return m_ItemImage; }
+            set
+            {
+                if (value != m_ItemImage)
+                {
+                    m_ItemImage = value;
+                    OnPropertyChanged("ItemImage");
+                }
+            }
+        }
+
+        [WProperty("Textbox", "Line Count", true, "The maximum number of lines displayed in one textbox.")]
+        public short LineCount
+        {
+            get { return (short)m_LineCount; }
+            set
+            {
+                if (value != m_LineCount)
+                {
+                    m_LineCount = (ushort)value;
+                    OnPropertyChanged("LineCount");
+                }
+            }
+        }
+
+        [WProperty("Misc.", "Initial Animation", true, "An animation for the NPC speaking the message to run when the textbox is first displayed.")]
+        public byte InitialAnimation
+        {
+            get { return m_InitialAnimation; }
+            set
+            {
+                if (value != m_InitialAnimation)
+                {
+                    m_InitialAnimation = value;
+                    OnPropertyChanged("InitialAnimation");
+                }
+            }
+        }
+
+        [WProperty("Misc.", "Initial Camera Position", true, "Not completely known. Index of a camera position to put the camera at when the textbox is first displayed?")]
+        public byte InitialCamera
+        {
+            get { return m_InitialCamera; }
+            set
+            {
+                if (value != m_InitialCamera)
+                {
+                    m_InitialCamera = value;
+                    OnPropertyChanged("InitialCamera");
+                }
+            }
+        }
+
+        [WProperty("Misc.", "Initial Sound", true, "A sound played when the textbox is first displayed.")]
+        public byte InitialSound
+        {
+            get { return m_InitialSound; }
+            set
+            {
+                if (value != m_InitialSound)
+                {
+                    m_InitialSound = value;
+                    OnPropertyChanged("InitialSound");
+                }
+            }
+        }
+
+        [WProperty("Misc.", "Item Price", true, "Not completely known. The price of an item being sold by shopkeepers?")]
+        public short ItemPrice
+        {
+            get { return (short)m_ItemPrice; }
+            set
+            {
+                if (value != m_ItemPrice)
+                {
+                    m_ItemPrice = (ushort)value;
+                    OnPropertyChanged("ItemPrice");
+                }
+            }
+        }
+
+        public string Text
+        {
+            get { return m_Text; }
+            set
+            {
+                if (value != m_Text)
+                {
+                    m_Text = value;
+                    OnPropertyChanged("Text");
+                }
+            }
+        }
+
+        public ushort MessageID
+        {
+            get { return m_MessageID; }
+            set
+            {
+                if (value != m_MessageID)
+                {
+                    m_MessageID = value;
+                    OnPropertyChanged("MessageID");
+                }
+            }
+        }
 
         public int Index
         {
-            get { return m_index; }
+            get { return m_Index; }
             set
             {
-                if (value != m_index)
+                if (value != m_Index)
                 {
-                    m_index = value;
-                    NotifyPropertyChanged("Index");
+                    m_Index = value;
+                    OnPropertyChanged("Index");
                 }
             }
         }
 
-        #region short MessageID
+        private int m_Index;
+        private string m_Text;
 
-        public short MessageId
+        private ushort m_MessageID;
+        private ushort m_ItemPrice;
+        private ushort m_NextMessageID;
+        private ushort m_Unknown1;
+        private BoxType m_TextboxType;
+        private DrawType m_DrawType;
+        private BoxPosition m_TextboxPosition;
+        private ItemID m_ItemImage;
+        private bool m_Unknown2;
+        private byte m_InitialSound;
+        private byte m_InitialCamera;
+        private byte m_InitialAnimation;
+        private ushort m_LineCount;
+
+        public Message()
         {
-            get { return m_messageId; }
-            set
-            {
-                if (value != m_messageId)
-                {
-                    m_messageId = value;
-
-                    NotifyPropertyChanged("MessageId");
-                }
-            }
+            LineCount = 1;
+            m_ItemImage = ItemID.No_item;
         }
 
-        private short m_messageId;
-
-        #endregion
-
-        #region short Item Price
-
-        public short ItemPrice
+        public Message(EndianBinaryReader reader, int text_bank_offset, Encoding text_encoding)
         {
-            get { return m_itemPrice; }
+            uint text_data_offset = reader.ReadUInt32();
 
-            set
-            {
-                if (value != m_itemPrice)
-                {
-                    m_itemPrice = value;
+            m_MessageID = reader.ReadUInt16();
+            m_ItemPrice = reader.ReadUInt16();
+            m_NextMessageID = reader.ReadUInt16();
 
-                    NotifyPropertyChanged("UnknownField1");
-                }
-            }
-        }
+            m_Unknown1 = reader.ReadUInt16();
 
-        private short m_itemPrice;
+            m_TextboxType = (BoxType)reader.ReadByte();
+            m_DrawType = (DrawType)reader.ReadByte();
+            m_TextboxPosition = (BoxPosition)reader.ReadByte();
+            m_ItemImage = (ItemID)reader.ReadByte();
 
-        #endregion
+            m_Unknown2 = reader.ReadBoolean();
 
-        #region short Next Message ID
-
-        public short NextMessageID
-        {
-            get { return m_nextMessageID; }
-
-            set
-            {
-                if (value != m_nextMessageID)
-                {
-                    m_nextMessageID = value;
-
-                    NotifyPropertyChanged("UnknownField2");
-                }
-            }
-        }
-
-        private short m_nextMessageID;
-
-        #endregion
-
-        #region short UnknownField3
-
-        public short UnknownField3
-        {
-            get { return m_unknownField3; }
-
-            set
-            {
-                if (value != m_unknownField3)
-                {
-                    m_unknownField3 = value;
-
-                    NotifyPropertyChanged("UnknownField3");
-                }
-            }
-        }
-
-        private short m_unknownField3;
-
-        #endregion
-
-        #region BoxTypes TextBoxType
-
-        public BoxTypes TextBoxType
-        {
-            get { return m_textBoxType; }
-
-            set
-            {
-                if (value != m_textBoxType)
-                {
-                    m_textBoxType = value;
-
-                    NotifyPropertyChanged("TextBoxType");
-                }
-            }
-        }
-
-        private BoxTypes m_textBoxType;
-
-        #endregion
-
-        #region byte InitialDrawType
-
-        public DrawTypes InitialDrawType
-        {
-            get { return m_initialDrawType; }
-
-            set
-            {
-                if (value != m_initialDrawType)
-                {
-                    m_initialDrawType = value;
-
-                    NotifyPropertyChanged("InitialDrawType");
-                }
-            }
-        }
-
-        private DrawTypes m_initialDrawType;
-
-        #endregion
-
-        #region BoxPositions TextBoxPosition
-
-        public BoxPositions TextBoxPosition
-        {
-            get { return m_textBoxPosition; }
-            set
-            {
-                if (value != m_textBoxPosition)
-                {
-                    m_textBoxPosition = value;
-
-                    NotifyPropertyChanged("TextBoxPosition");
-                }
-            }
-        }
-
-        private BoxPositions m_textBoxPosition;
-
-        #endregion
-
-        #region ItemIdValue DisplayItemId
-
-        public ItemID DisplayItemId
-        {
-            get { return m_displayItemId; }
-
-            set
-            {
-                if (value != m_displayItemId)
-                {
-                    m_displayItemId = value;
-
-                    NotifyPropertyChanged("DisplayItemId");
-                }
-            }
-        }
-
-        private ItemID m_displayItemId;
-
-        #endregion
-
-        #region bool UnknownBool1
-
-        public bool UnknownBool1
-        {
-            get { return m_unknownBool1; }
-
-            set
-            {
-                if (value != m_unknownBool1)
-                {
-                    m_unknownBool1 = value;
-
-                    NotifyPropertyChanged("UnknownBool1");
-                }
-            }
-        }
-
-        private bool m_unknownBool1;
-
-        #endregion
-
-        #region byte InitialSound
-
-        public byte InitialSound
-        {
-            get { return m_initialSound; }
-
-            set
-            {
-                if (value != m_initialSound)
-                {
-                    m_initialSound = value;
-
-                    NotifyPropertyChanged("InitialSound");
-                }
-            }
-        }
-
-        private byte m_initialSound;
-
-        #endregion
-
-        #region byte InitialCameraBehavior
-
-        public byte InitialCameraBehavior
-        {
-            get { return m_initialCameraBehavior; }
-
-            set
-            {
-                if (value != m_initialCameraBehavior)
-                {
-                    m_initialCameraBehavior = value;
-
-                    NotifyPropertyChanged("InitialCameraBehavior");
-                }
-            }
-        }
-
-        private byte m_initialCameraBehavior;
-
-        #endregion
-
-        #region byte InitialSpeakerAnim
-
-        public byte InitialSpeakerAnim
-        {
-            get { return m_initialSpeakerAnim; }
-
-            set
-            {
-                if (value != m_initialSpeakerAnim)
-                {
-                    m_initialSpeakerAnim = value;
-
-                    NotifyPropertyChanged("InitialSpeakerAnim");
-                }
-            }
-        }
-
-        private byte m_initialSpeakerAnim;
-
-        #endregion
-
-        #region short NumLinesPerBox
-
-        public short NumLinesPerBox
-        {
-            get { return m_numLinesPerBox; }
-
-            set
-            {
-                if (value != m_numLinesPerBox)
-                {
-                    m_numLinesPerBox = value;
-
-                    NotifyPropertyChanged("NumLinesPerBox");
-                }
-            }
-        }
-
-        private short m_numLinesPerBox;
-
-        #endregion
-
-        #region string TextData
-
-        public string TextData
-        {
-            get { return m_textData; }
-
-            set
-            {
-                if (value != m_textData)
-                {
-                    m_textData = value;
-
-                    NotifyPropertyChanged("TextData");
-                }
-            }
-        }
-
-        private string m_textData;
-
-        #endregion
-
-        #region NotifyPropertyChanged Stuff
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
-
-        #endregion
-
-        public Message(short id, int index)
-        {
-            MessageId = id;
-            Index = index;
-            UnknownField3 = 96;
-            TextBoxPosition = BoxPositions.Bottom1;
-            DisplayItemId = ItemID.No_item;
-            TextData = "";
-        }
-
-        public Message(EndianBinaryReader reader)
-        {
-            m_textDataOffset = reader.ReadInt32();
-            m_messageId = reader.ReadInt16();
-            m_itemPrice = reader.ReadInt16();
-            m_nextMessageID = reader.ReadInt16();
-
-            m_unknownField3 = reader.ReadInt16();
-
-            m_textBoxType = (BoxTypes)reader.ReadByte();
-            m_initialDrawType = (DrawTypes)reader.ReadByte();
-            m_textBoxPosition = (BoxPositions)reader.ReadByte();
-            m_displayItemId = (ItemID)reader.ReadByte();
-
-            m_unknownBool1 = reader.ReadBoolean();
-
-            m_initialSound = reader.ReadByte();
-            m_initialCameraBehavior = reader.ReadByte();
-            m_initialSpeakerAnim = reader.ReadByte();
+            m_InitialSound = reader.ReadByte();
+            m_InitialCamera = reader.ReadByte();
+            m_InitialAnimation = reader.ReadByte();
 
             reader.SkipByte();
 
-            m_numLinesPerBox = reader.ReadInt16();
+            m_LineCount = reader.ReadUInt16();
 
             reader.SkipByte();
 
-            m_textData = "";
-        }
+            int next_message_pos = (int)reader.BaseStream.Position;
 
-        public void ReadTextData(EndianBinaryReader reader, Encoding encoding)
-        {
-            List<byte> charList = new List<byte>();
+            reader.BaseStream.Seek(text_bank_offset + text_data_offset, System.IO.SeekOrigin.Begin);
 
-            byte nextByte = reader.ReadByte();
+            List<byte> msg_bytes = new List<byte>();
 
-            while (nextByte != 0)
+            byte test_byte = reader.ReadByte();
+
+            while (test_byte != 0)
             {
-                // Not a control code
-                if (nextByte != 0x1A)
+                if (test_byte == 0x1A)
                 {
-                    //if (nextByte == '\\')
-                        //charList.Add((byte)'\\');
+                    byte code_size = reader.ReadByte();
+                    byte[] code_data = reader.ReadBytes(code_size - 2);
 
-                    charList.Add(nextByte);
+                    msg_bytes.AddRange(ProcessControlCode(code_size, code_data));
                 }
-
-                // Control code
                 else
                 {
-                    byte m_controlCodeSizeTest = reader.ReadByte();
-
-                    switch (m_controlCodeSizeTest)
+                    if (TextMinitor.CharacterRemap.ContainsKey((char)test_byte))
                     {
-                        case 5:
-                            string controlCode5 = GetFiveByteControlTag(reader);
-                            charList.AddRange(encoding.GetBytes(controlCode5.ToCharArray()));
-                            break;
-                        case 6:
-                            string controlCodeCol = GetColorControlTag(reader);
-                            charList.AddRange(encoding.GetBytes(controlCodeCol.ToCharArray()));
-                            break;
-                        case 7:
-                            string controlCode7 = GetSevenByteControlTag(reader);
-                            charList.AddRange(encoding.GetBytes(controlCode7.ToCharArray()));
-                            break;
-                        default:
-                            string controlCodeFuri = GetFuriganaControlTag(reader, m_controlCodeSizeTest, encoding);
-                            charList.AddRange(encoding.GetBytes(controlCodeFuri.ToCharArray()));
-                            break;
+                        byte[] aa = BitConverter.GetBytes(TextMinitor.CharacterRemap[(char)test_byte]);
+                        msg_bytes.AddRange(aa);
+                    }
+                    else
+                    {
+                        msg_bytes.Add(test_byte);
                     }
                 }
 
-                nextByte = reader.ReadByte();
+                test_byte = reader.ReadByte();
             }
 
-            m_textData = encoding.GetString(charList.ToArray());
+            Text = text_encoding.GetString(msg_bytes.ToArray());
+
+            reader.BaseStream.Seek(next_message_pos, System.IO.SeekOrigin.Begin);
         }
 
-        public byte[] WriteMessage(EndianBinaryWriter writer, Encoding encoding)
+        public void Save(EndianBinaryWriter message_data_stream, EndianBinaryWriter text_data_stream, Encoding enc)
         {
-            writer.Write((int)0); // Text offset placeholder
-            writer.Write((ushort)m_messageId);
-            writer.Write((ushort)m_itemPrice);
-            writer.Write((ushort)m_nextMessageID);
-            writer.Write((ushort)m_unknownField3);
-            writer.Write((byte)m_textBoxType);
-            writer.Write((byte)m_initialDrawType);
-            writer.Write((byte)m_textBoxPosition);
-            writer.Write((byte)m_displayItemId);
-            writer.Write((bool)m_unknownBool1);
-            writer.Write((byte)m_initialSound);
-            writer.Write((byte)m_initialCameraBehavior);
-            writer.Write((byte)m_initialSpeakerAnim);
-            writer.Write((byte)0); // Padding?
-            writer.Write((ushort)m_numLinesPerBox);
-            writer.Write((byte)0); // Padding.
-
-            return TextToByteArray(encoding);
-        }
-
-        private byte[] TextToByteArray(Encoding encoding)
-        {
-            List<byte> outList = new List<byte>();
-
-            int i = 0;
-
-            while (i < TextData.Length)
+            if (m_MessageID != 0)
             {
-                int index = TextData.IndexOf('\\', i);
-                int count = ((index < 0 ? TextData.Length : index) - i);
+                message_data_stream.Write((int)text_data_stream.BaseStream.Length);
+            }
+            else
+            {
+                message_data_stream.Write(0);
+            }
 
-                byte[] bytes = encoding.GetBytes(TextData.Substring(i, count));
-                outList.AddRange(bytes);
+            message_data_stream.Write(m_MessageID);
+            message_data_stream.Write(m_ItemPrice);
+            message_data_stream.Write(m_NextMessageID);
 
-                i += count;
+            message_data_stream.Write(m_Unknown1);
 
-                if (i == TextData.Length)
-                    break;
+            message_data_stream.Write((byte)m_TextboxType);
+            message_data_stream.Write((byte)m_DrawType);
+            message_data_stream.Write((byte)m_TextboxPosition);
+            message_data_stream.Write((byte)m_ItemImage);
 
-                i++;
+            message_data_stream.Write(m_Unknown2);
 
-                try
+            message_data_stream.Write(m_InitialSound);
+            message_data_stream.Write(m_InitialCamera);
+            message_data_stream.Write(m_InitialAnimation);
+
+            message_data_stream.Write((byte)0);
+            message_data_stream.Write(m_LineCount);
+            message_data_stream.Write((byte)0);
+
+            if (m_MessageID != 0)
+            {
+                List<byte> raw_text_data = new List<byte>(enc.GetBytes(m_Text));
+                List<byte> processed_text_data = new List<byte>();
+
+                for (int i = 0; i < raw_text_data.Count; i++)
                 {
-                    switch (TextData[i])
+                    // Control tag start. Process the control tag.
+                    if (raw_text_data[i] == (byte)'[')
                     {
-                        case '<':
-                            i++;
-                            int end = TextData.IndexOf('>', i);
-                            string tag = TextData.Substring(i, end - i);
-                            bytes = ProcessControlTag(tag, encoding);
-                            outList.AddRange(bytes);
-                            i = end + 1;
-                            break;
-                        case '\\':
-                            i++;
-                            outList.Add((byte)'\\');
-                            break;
+                        List<char> tag_chars = new List<char>();
+
+                        for (int j = i + 1; j < raw_text_data.Count; j++)
+                        {
+                            if (raw_text_data[j] == (byte)']')
+                            {
+                                break;
+                            }
+                            else if (j == raw_text_data.Count - 1)
+                            {
+                                // If we've gotten to this point, there is no closing brakcet ']'.
+                                // We'll clear the tag_chars list and proceed as if the tag was empty, ie '[]'.
+                                tag_chars.Clear();
+                                break;
+                            }
+
+                            tag_chars.Add((char)raw_text_data[j]);
+                        }
+
+                        if (tag_chars.Count > 0)
+                        {
+                            processed_text_data.AddRange(ProcessControlTag(new string(tag_chars.ToArray())));
+
+                            // tag_chars contains everything between '[' and ']'. We add 1 to the length to account for '[',
+                            // and the 'i++' of the loop will account for ']'.
+                            i += tag_chars.Count + 1;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
-                }
-                catch
-                {
-                    throw new FormatException();
-                }
-            }
-
-            if (m_messageId != 0)
-                outList.Add(0);
-
-            return outList.ToArray();
-        }
-
-        public bool TestControlTagsValid(Encoding encoding)
-        {
-            int i = 0;
-
-            while (i < TextData.Length)
-            {
-                int index = TextData.IndexOf('\\', i);
-                int count = ((index < 0 ? TextData.Length : index) - i);
-
-                i += count;
-
-                if (i == TextData.Length)
-                    break;
-
-                i++;
-
-                try
-                {
-                    switch (TextData[i])
-                    {
-                        case '<':
-                            i++;
-                            int end = TextData.IndexOf('>', i);
-                            if (end < 0)
-                                return false;
-
-                            string tag = TextData.Substring(i, end - i);
-                            byte[] asTag = ProcessControlTag(tag, encoding);
-                            if (asTag.Length == 0)
-                                return false;
-
-                            i = end + 1;
-                            break;
-                        case '\\':
-                            i++;
-                            break;
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /*private byte[] TextToByteArray(Encoding encoding)
-        {
-            byte[] output = new byte[1];
-
-            List<byte> charData = new List<byte>(encoding.GetBytes(m_textData));
-            List<byte> newData = new List<byte>();
-
-            for (int i = 0; i < charData.Count; i++)
-            {
-                if (charData[i] != '\\')
-                {
-                    if (charData[i] == (char)0xD)
+                    // Control tag end. We shouldn't encounter ']' outside of the parsing routine above,
+                    // so we will just skip it and not include it in the processed data.
+                    else if (raw_text_data[i] == (byte)']')
                     {
                         continue;
                     }
-
-                    newData.Add(charData[i]);
-                    continue;
+                    else if (raw_text_data[i] == '\n')
+                    {
+                        processed_text_data.Add(0xA);
+                    }
+                    else if (raw_text_data[i] == '\r')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        processed_text_data.Add(raw_text_data[i]);
+                    }
                 }
 
-                if (i + 1 < charData.Count)
+                processed_text_data.Add(0);
+                text_data_stream.Write(processed_text_data.ToArray());
+            }
+        }
+
+        private byte[] ProcessControlCode(byte size, byte[] data)
+        {
+            List<byte> result = new List<byte>();
+            result.Add((byte)'['); // Tag start
+
+            if (size == 5)
+            {
+                switch (data[0])
                 {
-                    if (charData[i + 1] == '\\')
-                    {
-                        int index = i + 1;
+                    case 0:
+                        string five_name = Enum.GetName(typeof(FiveByteCode), data[2]);
+                        result.AddRange(Encoding.ASCII.GetBytes(five_name.ToLowerInvariant()));
+                        break;
+                    case 1:
+                        result.AddRange(Encoding.ASCII.GetBytes("sound="));
 
-                        while (charData[index] != '<')
-                        {
-                            newData.Add(charData[index]);
-                            index++;
-                        }
+                        short sound_id = BitConverter.ToInt16(new byte[] { data[2], data[1] }, 0);
+                        result.AddRange(Encoding.ASCII.GetBytes(sound_id.ToString()));
+                        break;
+                    case 2:
+                        result.AddRange(Encoding.ASCII.GetBytes("camera="));
 
-                        charData.Remove(charData[i]);
-                        //i--;
-                    }
-                    else if (charData[i + 1] == '<')
-                    {
-                        charData.Remove(charData[i]);
-                        //i++;
+                        short cam_id = BitConverter.ToInt16(new byte[] { data[2], data[1] }, 0);
+                        result.AddRange(Encoding.ASCII.GetBytes(cam_id.ToString()));
+                        break;
+                    case 3:
+                        result.AddRange(Encoding.ASCII.GetBytes("animation="));
 
-                        int tagSize = 0;
-                        byte[] code = ProcessControlTag(charData, i, out tagSize);
-
-                        charData.InsertRange((int)(i + tagSize), code.ToArray());
-                        charData.RemoveRange(i, (int)tagSize);
-
-                        i += code.Length - 1;
-                    }
+                        short anim_id = BitConverter.ToInt16(new byte[] { data[2], data[1] }, 0);
+                        result.AddRange(Encoding.ASCII.GetBytes(anim_id.ToString()));
+                        break;
                 }
             }
-
-            if (charData.Count != 0)
-                if (charData[charData.Count - 1] != 0)
-                    charData.Add(0);
-
-            return charData.ToArray();
-        }*/
-
-        private byte[] ProcessControlTag(string tag, Encoding encoding)
-        {
-            List<byte> tagBuffer = new List<byte>();
-
-            string[] tagArgs = tag.Split(':');
-
-            tagArgs[0] = tagArgs[0].ToLower();
-
-            if (tagArgs.Length > 1)
+            else if (size == 6)
             {
-                tagArgs[1] = tagArgs[1].ToLower();
+                string color_name = Enum.GetName(typeof(TextColor), data[3]);
+                result.AddRange(Encoding.ASCII.GetBytes(color_name));
+            }
+            else if (size == 7)
+            {
+                short seven_type = BitConverter.ToInt16(new byte[] { data[2], data[1] }, 0);
+                short seven_arg = BitConverter.ToInt16(new byte[] { data[4], data[3] }, 0);
+
+                string seven_name = Enum.GetName(typeof(SevenByteCode), seven_type);
+
+                result.AddRange(Encoding.ASCII.GetBytes(seven_name));
+                result.Add((byte)'=');
+                result.AddRange(Encoding.ASCII.GetBytes(seven_arg.ToString()));
             }
 
-            List<byte> code = new List<byte>();
+            result.Add((byte)']'); // Tag end
+            return result.ToArray(); ;
+        }
 
-            switch (tagArgs[0])
+        private byte[] ProcessControlTag(string tag)
+        {
+            if (tag.Contains('='))
             {
-                #region Five-Byte Codes
-                case "player":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PlayerName, 0);
-                    break;
+                string[] split_tag = tag.Split('=');
 
-                case "draw":
-                    if (tagArgs.Length > 1)
-                    {
-                        if (tagArgs[1] == "instant")
-                        {
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CharDrawInstant, 0);
-                        }
-
-                        if (tagArgs[1] == "char")
-                        {
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CharDrawByChar, 0);
-                        }
-
-                        else
-                        {
-                            //Error handler
-                        }
-                    }
-                    break;
-
-                case "two choices":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TwoChoices, 0);
-                    break;
-
-                case "three choices":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ThreeChoices, 0);
-                    break;
-
-                case "icon":
-                    switch (tagArgs[1])
-                    {
-                        case "a button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AButtonIcon, 0);
-                            break;
-                        case "b button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BButtonIcon, 0);
-                            break;
-                        case "c stick":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CStickIcon, 0);
-                            break;
-                        case "d pad":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.DPadIcon, 0);
-                            break;
-                        case "l trigger":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.LTriggerIcon, 0);
-                            break;
-                        case "r trigger":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RTriggerIcon, 0);
-                            break;
-                        case "x button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.XButtonIcon, 0);
-                            break;
-                        case "y button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.YButtonIcon, 0);
-                            break;
-                        case "z button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ZButtonIcon, 0);
-                            break;
-                        case "control stick (all directions)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
-                            break;
-                        case "control stick (moving up)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
-                            break;
-                        case "control stick (moving down)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
-                            break;
-                        case "control stick (moving left)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
-                            break;
-                        case "control stick (moving right)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
-                            break;
-                        case "control stick (moving up+down)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
-                            break;
-                        case "control stick (moving left+right)":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
-                            break;
-                        case "left arrow":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.LeftArrowIcon, 0);
-                            break;
-                        case "right arrow":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RightArrowIcon, 0);
-                            break;
-                        case "up arrow":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.UpArrowIcon, 0);
-                            break;
-                        case "down arrow":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.DownArrowIcon, 0);
-                            break;
-                        case "flashing a button":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StarburstAIcon, 0);
-                            break;
-                        case "target starburst":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TargetStarburstIcon, 0);
-                            break;
-                        case "heart":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.HeartIcon, 0);
-                            break;
-                        case "music note":
-                            code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.HeartIcon, 0);
-                            break;
-                    }
-                    break;
-
-                case "control stick":
-                    if (tagArgs.Length == 1)
-                    {
-                        code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.StaticControlStickIcon, 0);
-                    }
-
-                    else
-                    {
-                        switch (tagArgs[1])
-                        {
-                            #region Direction Switch
-                            case "up":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUp, 0);
-                                break;
-
-                            case "down":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingDown, 0);
-                                break;
-
-                            case "left":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeft, 0);
-                                break;
-
-                            case "right":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingRight, 0);
-                                break;
-
-                            case "up+down":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingUpAndDown, 0);
-                                break;
-
-                            case "left+right":
-                                code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ControlStickMovingLeftAndRight, 0);
-                                break;
-
-                            default:
-                                //Error handling
-                                break;
-                                #endregion
-                        }
-                    }
-                    break;
-
-                case "first choice":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChoiceOne, 0);
-                    break;
-
-                case "second choice":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChoiceTwo, 0);
-                    break;
-
-                case "canon game balls":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CanonGameBalls, 0);
-                    break;
-
-                case "broken vase payment":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BrokenVasePayment, 0);
-                    break;
-
-                case "auction character":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionCharacter, 0);
-                    break;
-
-                case "auction item":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionItemName, 0);
-                    break;
-
-                case "auction bid":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionPersonBid, 0);
-                    break;
-
-                case "starting auction bid":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.AuctionStartingBid, 0);
-                    break;
-
-                case "player bid selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PlayerAuctionBidSelector, 0);
-                    break;
-
-                case "blows":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.OrcaBlowCount, 0);
-                    break;
-
-                case "pirate ship password":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PirateShipPassword, 0);
-                    break;
-
-                case "player letter count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostOfficeGamePlayerLetterCount, 0);
-                    break;
-
-                case "letter rupee reward":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostOfficeGameRupeeReward, 0);
-                    break;
-
-                case "letters":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PostBoxLetterCount, 0);
-                    break;
-
-                case "korok count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RemainingKoroks, 0);
-                    break;
-
-                case "forest water time":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.RemainingForestWaterTime, 0);
-                    break;
-
-                case "flight platform time":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FlightPlatformGameTime, 0);
-                    break;
-
-                case "flight platform record":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FlightPlatformGameRecord, 0);
-                    break;
-
-                case "beedle points":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BeedlePointCount, 0);
-                    break;
-
-                case "ms. marie joy pendants":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantCountMsMarie, 0);
-                    break;
-
-                case "ms. marie pendant total":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.MsMariePendantTotal, 0);
-                    break;
-
-                case "pig game time":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.PigGameTime, 0);
-                    break;
-
-                case "boating course rupees":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SailingGameRupeeReward, 0);
-                    break;
-
-                case "current bomb capacity":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CurrentBombCapacity, 0);
-                    break;
-
-                case "current arrow capacity":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.CurrentArrowCapacity, 0);
-                    break;
-
-                case "target letter count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.TargetLetterCount, 0);
-                    break;
-
-                case "fishman hit count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FishmanHitCount, 0);
-                    break;
-
-                case "fishman rupees":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.FishmanRupeeReward, 0);
-                    break;
-
-                case "boko baba seed count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BokoBabaSeedCount, 0);
-                    break;
-
-                case "skull necklace count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SkullNecklaceCount, 0);
-                    break;
-
-                case "chu jelly count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChuJellyCount, 0);
-                    break;
-
-                case "joy pendant count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantCountBeedle, 0);
-                    break;
-
-                case "golden feather count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.GoldenFeatherCount, 0);
-                    break;
-
-                case "knight's crest count":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.KnightsCrestCount, 0);
-                    break;
-
-                case "beedle price offer":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BeedlePriceOffer, 0);
-                    break;
-
-                case "boko baba seed selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.BokoBabaSeedSellSelector, 0);
-                    break;
-
-                case "skull necklace selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.SkullNecklaceSellSelector, 0);
-                    break;
-
-                case "chu jelly selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.ChuJellySellSelector, 0);
-                    break;
-
-                case "joy pendant selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.JoyPendantSellSelector, 0);
-                    break;
-
-                case "golden feather selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.GoldenFeatherSellSelector, 0);
-                    break;
-
-                case "knight's crest selector":
-                    code = ConvertTagToFiveByteControlCode(0, (byte)FiveByteTypes.KnightsCrestSellSelector, 0);
-                    break;
-
-                case "sound":
-                    if (tagArgs.Length > 1)
-                    {
-                        code = ConvertTagToFiveByteControlCode(1, 1, Convert.ToInt16(tagArgs[1]));
-                    }
-
-                    else
-                    {
-                        //Error handler
-                    }
-                    break;
-
-                case "camera":
-                    if (tagArgs.Length > 1)
-                    {
-                        code = ConvertTagToFiveByteControlCode(2, 2, Convert.ToInt16(tagArgs[1]));
-                    }
-
-                    else
-                    {
-                        //Error handler
-                    }
-                    break;
-
-                case "animation":
-                    if (tagArgs.Length > 1)
-                    {
-                        code = ConvertTagToFiveByteControlCode(3, 3, Convert.ToInt16(tagArgs[1]));
-                    }
-
-                    else
-                    {
-                        //Error handler
-                    }
-                    break;
-                #endregion
-
-                #region Six-Byte Code
-                case "color":
-                    if (tagArgs.Length > 1)
-                    {
-                        byte[] arg = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-                        code.Add(0x1A);
-                        code.Add(0x06);
-                        code.Add(0xFF);
-                        code.Add(0x00);
-                        code.Add(arg[1]);
-                        code.Add(arg[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-                #endregion
-
-                #region Seven-Byte Codes
-                case "scale":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0xFF);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.SetTextSize);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-
-                case "wait+dismiss (prompt)":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.WaitAndDismissWithPrompt);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-
-                case "wait+dismiss":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.WaitAndDismiss);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-
-                case "dismiss":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.Dismiss);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-
-                case "dummy":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.Dummy);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-
-                case "wait":
-                    if (tagArgs.Length > 1)
-                    {
-                        code.Add(0x1A);
-                        code.Add(0x07);
-                        code.Add(0x00);
-                        code.Add(0x00);
-                        code.Add((byte)SevenByteTypes.Wait);
-
-                        byte[] tempShort = BitConverter.GetBytes(Convert.ToInt16(tagArgs[1]));
-
-                        code.Add(tempShort[1]);
-                        code.Add(tempShort[0]);
-                    }
-
-                    else
-                    {
-                        //error handling
-                    }
-                    break;
-                case "furigana":
-                    string[] furArgs = tagArgs[1].Split(',');
-                    byte stride = Convert.ToByte(furArgs[0]);
-
-                    int numChars = furArgs[1].Length;
-                    int codeLength = 6 + (2 * numChars);
-
-                    code.Add(0x1A);
-                    code.Add((byte)codeLength);
-                    code.Add(255);
-                    code.Add(0);
-                    code.Add(2);
-                    code.Add(stride);
-
-                    byte[] charBytes = encoding.GetBytes(furArgs[1]);
-                    code.AddRange(charBytes);
-                    break;
-                #endregion
-                default:
+                if (split_tag.Length < 2)
+                {
                     return new byte[0];
+                }
+
+                ushort tag_arg = Convert.ToUInt16(split_tag[1]);
+                byte[] tag_arg_bytes = BitConverter.GetBytes(tag_arg);
+
+                if (Enum.TryParse(split_tag[0], out SevenByteCode seven_result))
+                {
+                    return new byte[] { 0x1A, 0x07, 0x00, 0x00, (byte)seven_result, tag_arg_bytes[1], tag_arg_bytes[0] };
+                }
+                else if (split_tag[0] == "sound")
+                {
+                    return new byte[] { 0x1A, 0x05, 0x01, tag_arg_bytes[1], tag_arg_bytes[0] };
+                }
+                else if (split_tag[0] == "camera")
+                {
+                    return new byte[] { 0x1A, 0x05, 0x02, tag_arg_bytes[1], tag_arg_bytes[0] };
+                }
+                else if (split_tag[0] == "animation")
+                {
+                    return new byte[] { 0x1A, 0x05, 0x03, tag_arg_bytes[1], tag_arg_bytes[0] };
+                }
+                else
+                {
+                    return new byte[0];
+                }
             }
-
-            return code.ToArray();
-        }
-
-        private string GetFiveByteControlTag(EndianBinaryReader reader)
-        {
-            string m_controlCodeString = "";
-
-            byte typeTestByte = reader.ReadByte();
-
-            switch (typeTestByte)
+            else if (Enum.TryParse(tag, out FiveByteCode five_result))
             {
-                case 0:
-                    FiveByteTypes fiveControlCode = (FiveByteTypes)reader.ReadInt16();
-                    m_controlCodeString = "\\<" + ExtensionMethods.GetDescription(fiveControlCode) + ">";
-                    break;
-                case 1:
-                    m_controlCodeString = "\\<sound:" + Convert.ToString(reader.ReadInt16()) + ">";
-                    break;
-                case 2:
-                    m_controlCodeString = "\\<camera:" + Convert.ToString(reader.ReadInt16()) + ">";
-                    break;
-                case 3:
-                    m_controlCodeString = "\\<animation:" + Convert.ToString(reader.ReadInt16()) + ">";
-                    break;
+                return new byte[] { 0x1A, 0x05, 0x00, 0x00, (byte)five_result };
             }
-
-            return m_controlCodeString;
-        }
-
-        private string GetColorControlTag(EndianBinaryReader reader)
-        {
-            string codeInvariable = "\\<color:";
-
-            reader.Skip(2);
-
-            string m_controlCodeString = codeInvariable + Convert.ToString(reader.ReadInt16()) + ">";
-
-            return m_controlCodeString;
-        }
-
-        private string GetSevenByteControlTag(EndianBinaryReader reader)
-        {
-            string initialCode = "";
-
-            reader.SkipByte();
-
-            short codeType = reader.ReadInt16();
-
-            short codeData = reader.ReadInt16();
-
-            switch (codeType)
+            else if (Enum.TryParse(tag, out TextColor color_result))
             {
-                case (short)SevenByteTypes.SetTextSize:
-                    initialCode = "\\<scale:";
-                    break;
-                case (short)SevenByteTypes.WaitAndDismissWithPrompt:
-                    initialCode = "\\<wait+dismiss (prompt):";
-                    break;
-                case (short)SevenByteTypes.WaitAndDismiss:
-                    initialCode = "\\<wait+dismiss:";
-                    break;
-                case (short)SevenByteTypes.Dismiss:
-                    initialCode = "\\<dismiss:";
-                    break;
-                case (short)SevenByteTypes.Dummy:
-                    initialCode = "\\<dummy:";
-                    break;
-                case (short)SevenByteTypes.Wait:
-                    initialCode = "\\<wait:";
-                    break;
+                return new byte[] { 0x1A, 0x06, 0xFF, 0x00, 0x00, (byte)color_result };
             }
-
-            string m_controlCodeString = initialCode + Convert.ToString(codeData) + ">";
-
-            return m_controlCodeString;
-        }
-
-        private string GetFuriganaControlTag(EndianBinaryReader reader, int codeSize, Encoding encoding)
-        {
-            List<char> tagList = new List<char>();
-            tagList.AddRange("\\<furigana:");
-            codeSize -= 6;
-
-            reader.SkipByte();
-
-            short type = reader.ReadInt16();
-
-            if (type != 2)
-                throw new Exception("Furigana tag type was not 2!");
-
-            byte characterStride = reader.ReadByte();
-            tagList.AddRange($"{ characterStride },");
-
-            while (codeSize > 0)
+            else
             {
-                byte[] newChar = reader.ReadBytes(2);
-                tagList.AddRange(encoding.GetChars(newChar));
-                codeSize -= 2;
+                return new byte[0];
             }
-
-            tagList.Add('>');
-            return new string(tagList.ToArray());
-        }
-
-        public List<byte> ConvertTagToFiveByteControlCode(byte field2Type, byte normalType, short arg)
-        {
-            List<byte> code = new List<byte>();
-
-            byte[] temp;
-
-            code.Add(0x1A);
-            code.Add(0x05);
-
-            switch (field2Type)
-            {
-                case 0:
-                    code.Add(0x00);
-                    code.Add(0x00);
-                    code.Add(normalType);
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    code.Add(field2Type);
-
-                    temp = BitConverter.GetBytes(Convert.ToInt16(arg));
-
-                    code.Add(temp[1]);
-                    code.Add(temp[0]);
-                    break;
-            }
-
-            return code;
         }
     }
 }

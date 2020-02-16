@@ -38,12 +38,24 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.15.0.0\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="EndianBinaryStreams">
       <HintPath>.\EndianBinaryStreams.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.3\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -65,82 +77,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ColorEditor.xaml.cs">
-      <DependentUpon>ColorEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="src\BMC.cs" />
-    <Compile Include="src\BMG.cs" />
-    <Compile Include="src\Color32.cs" />
-    <Compile Include="src\Enums\ControlCodeEnums.cs" />
-    <Compile Include="src\Enums\TextBoxEnums.cs" />
-    <Compile Include="src\Enums\ItemIDEnum.cs" />
-    <Compile Include="src\LinearColor.cs" />
+    <Compile Include="src\TypeCustomization\Attributes.cs" />
+    <Compile Include="src\IMinitor.cs" />
+    <Compile Include="src\TypeCustomization\IPropertyTypeCustomization.cs" />
     <Compile Include="src\Message.cs" />
-    <Compile Include="src\test\Attributes.cs" />
-    <Compile Include="src\test\IMinitor.cs" />
-    <Compile Include="src\test\IPropertyTypeCustomization.cs" />
-    <Compile Include="src\test\Message.cs" />
-    <Compile Include="src\test\MessageTextValidationRule.cs" />
-    <Compile Include="src\test\NullToBoolConverter.cs" />
-    <Compile Include="src\test\RelayCommand.cs" />
-    <Compile Include="src\test\TextMinitor.cs" />
-    <Compile Include="src\test\TextMinitorEnums.cs" />
-    <Compile Include="src\test\TextMinitorWindow.xaml.cs" />
-    <Compile Include="src\test\TypeCustomization\BooleanTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\ByteTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\EnumTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\IntegerTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\ShortTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\SingleTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\StringTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\UIntegerTypeCustomization.cs" />
-    <Compile Include="src\test\TypeCustomization\UShortTypeCustomization.cs" />
-    <Compile Include="src\test\WDetailCategoryRow.xaml.cs" />
-    <Compile Include="src\test\WDetailsCategoryRowViewModel.cs" />
-    <Compile Include="src\test\WDetailSingleRow.xaml.cs" />
-    <Compile Include="src\test\WDetailSingleRowViewModel.cs" />
-    <Compile Include="src\test\WDetailsView.xaml.cs" />
-    <Compile Include="src\test\WDetailsViewViewModel.cs" />
-    <Compile Include="src\test\WDetailTree.xaml.cs" />
-    <Compile Include="src\ViewModel\ColorEditor_ViewModel.cs" />
-    <Compile Include="src\ViewModel\RelayCommand.cs" />
-    <Compile Include="src\ViewModel\ViewModel.cs" />
-    <Compile Include="src\ViewModel\ViewModel_RelayCommands.cs" />
-    <Compile Include="src\ViewModel\NullToFalseConverter.cs" />
-    <Compile Include="src\ViewModel\ViewModel_Properties.cs" />
-    <Page Include="ColorEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="src\MessageTextValidationRule.cs" />
+    <Compile Include="src\ViewModel\NullToBoolConverter.cs" />
+    <Compile Include="src\View\RelayCommand.cs" />
+    <Compile Include="src\ViewModel\TextMinitor.cs" />
+    <Compile Include="src\TextMinitorEnums.cs" />
+    <Compile Include="src\View\TextMinitorWindow.xaml.cs" />
+    <Compile Include="src\TypeCustomization\BooleanTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\ByteTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\EnumTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\IntegerTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\ShortTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\SingleTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\StringTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\UIntegerTypeCustomization.cs" />
+    <Compile Include="src\TypeCustomization\UShortTypeCustomization.cs" />
+    <Compile Include="src\View\WDetailCategoryRow.xaml.cs" />
+    <Compile Include="src\ViewModel\WDetailsCategoryRowViewModel.cs" />
+    <Compile Include="src\View\WDetailSingleRow.xaml.cs" />
+    <Compile Include="src\ViewModel\WDetailSingleRowViewModel.cs" />
+    <Compile Include="src\View\WDetailsView.xaml.cs" />
+    <Compile Include="src\ViewModel\WDetailsViewViewModel.cs" />
+    <Compile Include="src\View\WDetailTree.xaml.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="src\test\TextMinitorWindow.xaml">
+    <Page Include="src\View\TextMinitorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="src\test\WDetailCategoryRow.xaml">
+    <Page Include="src\View\WDetailCategoryRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="src\test\WDetailSingleRow.xaml">
+    <Page Include="src\View\WDetailSingleRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="src\test\WDetailsView.xaml">
+    <Page Include="src\View\WDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="src\test\WDetailTree.xaml">
+    <Page Include="src\View\WDetailTree.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -163,6 +146,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
