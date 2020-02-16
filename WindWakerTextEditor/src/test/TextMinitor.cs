@@ -71,6 +71,7 @@ namespace WindEditor.Minitors
 
         public ICommand OpenMinitorCommand { get { return new RelayCommand(x => OnRequestOpenFile()); } }
         public ICommand OpenFileCommand { get { return new RelayCommand(x => OnRequestOpenFile()); } }
+        public ICommand ExportCSVCommand { get { return new RelayCommand(x => OnRequestExportCSV()); } }
         public ICommand SaveMessageDataCommand { get { return new RelayCommand(x => OnRequestSaveMessageData()); } }
         public ICommand SaveMessageDataAsCommand { get { return new RelayCommand(x => OnRequestSaveMessageDataAs()); } }
         public ICommand AddMessageCommand { get { return new RelayCommand(x => OnRequestAddMessage()); } }
@@ -469,6 +470,32 @@ namespace WindEditor.Minitors
                     SearchFilter = "";
                 }
             }
+        }
+
+        public void OnRequestExportCSV()
+        {
+            SaveFileDialog save = new SaveFileDialog();
+
+            save.DefaultExt = ".csv";
+            save.Filter = "Comma-Separated Values (*.csv)|*.csv";
+
+            if (save.ShowDialog() == true)
+            {
+                File.WriteAllText(save.FileName, BuildCSV());
+            }
+        }
+
+        private string BuildCSV()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("ID,Text");
+
+            foreach (Message m in Messages)
+            {
+                builder.AppendLine($"{ m.Index },\"{ m.Text.Replace("\"", "\\\"") }\"");
+            }
+
+            return builder.ToString();
         }
     }
 }

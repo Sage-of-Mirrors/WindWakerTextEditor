@@ -38,6 +38,7 @@
                     <MenuItem Header="_Open File..." Command="{Binding OpenFileCommand}"/>
                     <MenuItem InputGestureText="Ctrl + S" Header="_Save" Command="{Binding SaveMessageDataCommand}"/>
                     <MenuItem Header="Save _As..." Command="{Binding SaveMessageDataAsCommand}"/>
+                    <MenuItem Header="Export CSV..." Command="{Binding ExportCSVCommand}"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
                     <MenuItem Header="Add Message" Command="{Binding AddMessageCommand}"/>
