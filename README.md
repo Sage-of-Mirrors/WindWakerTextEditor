@@ -1,3 +1,5 @@
+**This project is defunct. Please see [Winditor](https://lordned.github.io/Winditor/) for an updated text editor.**
+
 # Wind Waker Text Editor
 ![Program image](http://i.imgur.com/9kQZtOe.png)
 
